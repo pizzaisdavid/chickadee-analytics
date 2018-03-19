@@ -1,5 +1,5 @@
 
-import Api from 'chickadee-api';
+import Api from './chickadee-api';
 import express from 'express';
 
 const app = express();
