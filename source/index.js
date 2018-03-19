@@ -3,17 +3,16 @@ import Api from './chickadee-api';
 import express from 'express';
 
 const app = express();
-const api = Api.create({
-  baseURL: 'http://euclid.nmu.edu:11223/api',
-  isDebug: true
-});
+const api = Api.create('http://euclid.nmu.edu:11223/api', true);
+
 const frequency = 60000;
 let total = 0;
 
-app.get('/total',(req, res) => {
+app.get('/total', (req, res) => {
   res.json({
     'total': total
   });
+  res.end();
 });
 
 count().then((c) => {
@@ -27,9 +26,9 @@ setInterval(() => {
 }, frequency);
 
 function count() {
-  return api.get('/visits')
+  return api.get('visits?start=0&end=100000000000')
     .then((visits) => {
-      total = visits.length;
+      return visits.length;
     });
 }
 

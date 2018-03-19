@@ -1,7 +1,7 @@
 {
   "name": "chickadee-analytics",
   "version": "1.0.0",
-  "main": "distribution/index.js",
+  "main": "./distribution/index.js",
   "scripts": {
     "compile": "babel source --presets es2015,stage-2 -d distribution",
     "prepublish": "npm run compile",
