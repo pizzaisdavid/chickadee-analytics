@@ -8,7 +8,7 @@ const api = Api.create({
   isDebug: true
 });
 const frequency = 60000;
-let total = c;
+let total = 0;
 
 app.get('/total',(req, res) => {
   res.json({
