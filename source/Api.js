@@ -3,7 +3,7 @@ import mysql from 'mysql';
 
 import { EventEmitter } from 'events';
 
-import config from '../config';
+import config from './config';
 
 export default class Api extends EventEmitter {
 
