@@ -3,7 +3,7 @@ import mysql from 'mysql';
 
 import { EventEmitter } from 'events';
 
-class Api extends EventEmitter {
+export default class Api extends EventEmitter {
 
   constructor() {
     super();
@@ -11,38 +11,33 @@ class Api extends EventEmitter {
       host: 'localhost',
       user: 'root',
       password: 'poop',
-      database: 'chickadeeTest'
+      database: 'chickadeeTest',
+      multipleStatements: true
     });
-    this.connection.connect();
-    this.initialize();
-    this.listen();
+    this.connection.connect(() => {
+      this.initialize(() => {
+        this.listen();
+      });
+    });
   }
 
-  initialize() {
+  initialize(callback) {
     this.connection.query(`UPDATE visits SET isSynced=FALSE`, (error) => {
       if (error) {
-        // TODO
+        console.log('error init db');
       }
       this.emit('initialize');
+      callback();
     });
   }
 
   listen() {
-    const frequency = 15000;  
-    setInterval(() => {
-      this.connection.query(`
-        SELECT COUNT(*) FROM visits WHERE isSynced=FALSE FOR UPDATE;
-        UPDATE visits SET isSynced=TRUE;
-      `, (error, visits) => {
-        if (error) {
-          // TODO
-        }
-        if (visits.length) {
-          this.emit('visits', visits);
-        } 
+    this.connection.query(`SELECT * FROM visits WHERE isSynced=FALSE FOR UPDATE; UPDATE visits SET isSynced=TRUE;`)
+      .on('error', (error) => {
+        console.log(error);
+      })
+      .on('result', (result) => {
+        this.emit('visit', result);
       });
-    }, frequency);
   }
-
-
 }
