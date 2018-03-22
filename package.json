@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "chickadee-api": "github:pizzaisdavid/chickadee-api-js",
+    "chickadee-realtime-api": "pizzaisdavid/chickadee-realtime-api-js",
     "express": "^4.16.3",
     "request": "^2.85.0"
   }
