@@ -7,7 +7,11 @@ const port = 3000;
 
 const api = new Api('http://euclid.nmu.edu:11223/api');
 
-let total = 0;
+let total;
+
+api.on('initialize', () => {
+  total = 0;
+});
 
 api.on('visit', () => {
   total++;
