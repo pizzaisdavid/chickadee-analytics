@@ -1,17 +1,17 @@
 
-import Api from './chickadee-realtime-api';
+import Api from './Api';
+
 import express from 'express';
 
 const app = express();
 const port = 3000;
 
-const api = new Api(
-  
-);
+const api = new Api();
 
 let total;
 
 api.on('initialize', () => {
+  console.log('init');
   total = 0;
 });
 
