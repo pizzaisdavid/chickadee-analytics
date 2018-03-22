@@ -32,12 +32,20 @@ export default class Api extends EventEmitter {
   }
 
   listen() {
-    this.connection.query(`SELECT * FROM visits WHERE isSynced=FALSE FOR UPDATE; UPDATE visits SET isSynced=TRUE;`)
+    this.connection.query(`
+    SELECT * FROM visits WHERE isSynced=FALSE FOR UPDATE; UPDATE visits SET isSynced=TRUE;
+    `)
       .on('error', (error) => {
         console.log(error);
       })
       .on('result', (result) => {
         this.emit('visit', result);
+      })
+      .on('end', () => {
+        console.log('all visits');
+        setTimeout(() => {
+          this.listen();
+        }, 15000);
       });
   }
 }
