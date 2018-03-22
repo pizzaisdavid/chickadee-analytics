@@ -5,7 +5,9 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-const api = new Api('http://euclid.nmu.edu:11223/api');
+const api = new Api(
+  
+);
 
 let total;
 
