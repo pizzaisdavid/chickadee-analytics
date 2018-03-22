@@ -3,15 +3,17 @@ import mysql from 'mysql';
 
 import { EventEmitter } from 'events';
 
+import config from '../config';
+
 export default class Api extends EventEmitter {
 
   constructor() {
     super();
     this.connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: 'poop',
-      database: 'chickadeeTest',
+      host: config.host,
+      user: config.user,
+      password: config.password,
+      database: config.database,
       multipleStatements: true
     });
     this.connection.connect(() => {
