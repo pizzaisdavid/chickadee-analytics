@@ -4,7 +4,6 @@
   "main": "./distribution/index.js",
   "scripts": {
     "compile": "babel source --presets es2015,stage-2 -d distribution",
-    "prepublish": "npm run compile",
     "prestart": "npm run compile",
     "start": "node ./distribution/index.js"
   },

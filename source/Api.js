@@ -47,7 +47,7 @@ export default class Api extends EventEmitter {
         console.log('all visits');
         setTimeout(() => {
           this.listen();
-        }, 15000);
+        }, config.frequency);
       });
   }
 }
