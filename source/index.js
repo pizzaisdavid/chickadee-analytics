@@ -16,8 +16,7 @@ let total;
 io.on('connection', (socket) => {
   console.log('test!');
 
-  socket.emit('total', 5555);
-
+  socket.emit('total', total);
 });
 
 api.on('initialize', () => {
@@ -27,7 +26,6 @@ api.on('initialize', () => {
 
 api.on('visit', () => {
   total++;
-
 });
 
 
