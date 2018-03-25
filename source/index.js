@@ -13,8 +13,11 @@ const port = 3000;
 const api = new Api();
 let total;
 
-io.on('connection', () => {
+io.on('connection', (socket) => {
   console.log('test!');
+
+  socket.emit('total', 5555);
+
 });
 
 api.on('initialize', () => {
@@ -24,6 +27,7 @@ api.on('initialize', () => {
 
 api.on('visit', () => {
   total++;
+
 });
 
 
