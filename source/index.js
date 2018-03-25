@@ -12,16 +12,26 @@ const io = socket(server);
 const port = 3000;
 const api = new Api();
 let total;
+const snapshots = {};
 
 api.on('initialize', () => {
   console.log('init');
   total = 0;
 });
 
-api.on('visit', () => {
+api.on('visit', (visit) => {
+  let timestamp = visit.visitTimestamp;
+  const slot = determineIncrement(timestamp);
+  if (snapshots[slot] === undefined) {
+    snapshots[slot] = 0;
+  }
+  snapshots[slot]++;
   total++;
-  console.log(`the new total is ${total}`);
 });
+
+function determineIncrement(n) {
+  return Math.floor(n / 3600);
+}
 
 io.on('connection', (socket) => {
   console.log('test!');
@@ -43,6 +53,8 @@ app.use(function (req, res, next) {
 
 app.get('/health', (req, res) => {
   res.json({ status: 'good' });
+  console.log(snapshots);
+  console.log(Object.keys(snapshots).length);
   res.end();
 });
 

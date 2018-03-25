@@ -40,10 +40,7 @@ export default class Api extends EventEmitter {
       .on('error', (error) => {
         console.log(error);
       })
-      .on('result', (result) => {
-        console.log("--- start ---");
-        console.log(result);
-        console.log("---- end ----");        
+      .on('result', (result) => {      
         if (result.constructor.name === 'RowDataPacket') {
           this.emit('visit', result);
         }
