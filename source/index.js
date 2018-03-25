@@ -41,4 +41,4 @@ app.get('/health', (req, res) => {
 });
 
 console.log(`port ${port}`);
-app.listen(port);
+server.listen(port);
