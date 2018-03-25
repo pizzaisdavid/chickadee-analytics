@@ -41,6 +41,7 @@ export default class Api extends EventEmitter {
         console.log(error);
       })
       .on('result', (result) => {
+        console.log(result);
         if (result.constructor.name === 'RowDataPacket') {
           this.emit('visit', result);
         }

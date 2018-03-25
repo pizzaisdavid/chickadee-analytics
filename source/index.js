@@ -20,6 +20,7 @@ api.on('initialize', () => {
 
 api.on('visit', () => {
   total++;
+  console.log(`the new total is ${total}`);
 });
 
 io.on('connection', (socket) => {
