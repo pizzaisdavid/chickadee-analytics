@@ -25,9 +25,11 @@ api.on('visit', () => {
 io.on('connection', (socket) => {
   console.log('test!');
 
-  api.on('visit', () => {
+  api.on('visit', () => { // literally emits per visit
     socket.emit('total', total);
   });
+
+  socket.emit('total', total);
 });
 
 app.use(function (req, res, next) {
