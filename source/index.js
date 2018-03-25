@@ -2,13 +2,20 @@
 import Api from './Api';
 
 import express from 'express';
+import http from 'http';
+import socket from 'socket.io';
 
 const app = express();
+const server = http.createServer(app);
+const io = socket(server);
+
 const port = 3000;
-
 const api = new Api();
-
 let total;
+
+io.on('connection', () => {
+  console.log('test!');
+});
 
 api.on('initialize', () => {
   console.log('init');
@@ -18,7 +25,8 @@ api.on('initialize', () => {
 api.on('visit', () => {
   total++;
 });
-// Add headers
+
+
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -27,10 +35,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get('/api/total', (req, res) => {
-  res.json({
-    'total': total
-  });
+app.get('/health', (req, res) => {
+  res.json({ status: 'good' });
   res.end();
 });
 
