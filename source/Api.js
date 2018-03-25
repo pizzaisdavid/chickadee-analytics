@@ -24,7 +24,7 @@ export default class Api extends EventEmitter {
   }
 
   initialize(callback) {
-    this.connection.query(`UPDATE visits SET isSynced=FALSE`, (error) => {
+    this.connection.query(`UPDATE visits SET isSynced=FALSE;`, (error) => {
       if (error) {
         console.log('error init db');
       }
@@ -41,7 +41,9 @@ export default class Api extends EventEmitter {
         console.log(error);
       })
       .on('result', (result) => {
+        console.log("--- start ---");
         console.log(result);
+        console.log("---- end ----");        
         if (result.constructor.name === 'RowDataPacket') {
           this.emit('visit', result);
         }
