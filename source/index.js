@@ -13,12 +13,6 @@ const port = 3000;
 const api = new Api();
 let total;
 
-io.on('connection', (socket) => {
-  console.log('test!');
-
-  socket.emit('total', total);
-});
-
 api.on('initialize', () => {
   console.log('init');
   total = 0;
@@ -28,6 +22,13 @@ api.on('visit', () => {
   total++;
 });
 
+io.on('connection', (socket) => {
+  console.log('test!');
+
+  api.on('visit', () => {
+    socket.emit('total', total);
+  });
+});
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');
