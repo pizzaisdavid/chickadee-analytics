@@ -34,7 +34,18 @@ function determineIncrement(n) {
 
 io.on('connection', (socket) => {
   console.log('connection');
-  socket.emit('total', getTotal(snapshots));
+
+  socket.frame = 'NOW';
+  init(socket);
+
+  socket.on('frame', (timestamp) => {
+    socket.frame = determineIncrement(timestamp);
+    init(socket);
+  });
+
+  function init(socket) {
+    socket.emit('total', getTotal(snapshots, socket.frame));
+  }
 
   api.on('visit', () => {
     // emits per visit to each socket
@@ -43,8 +54,14 @@ io.on('connection', (socket) => {
   });
 });
 
-function getTotal(snaps) {
-  const totals = _.map(snaps, (s) => {
+function getTotal(snaps, frame) {
+  if (frame === 'NOW' || frame === undefined) {
+    frame = determineIncrement(Date.now() / 1000);
+  }
+  let ss = _.pickBy(snaps, (value, key) => {
+    return parseInt(key) <= frame;
+  });
+  const totals = _.map(ss, (s) => {
     return s.total;
   });
   return _.sum(totals);
@@ -60,9 +77,6 @@ app.use(function (req, res, next) {
 
 app.get('/health', (req, res) => {
   res.json({ status: 'good' });
-  console.log(snapshots);
-  console.log(Object.keys(snapshots).length);
-  console.log(getTotal(snapshots));
   res.end();
 });
 
