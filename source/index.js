@@ -1,6 +1,7 @@
 
 import Api from './Api';
 
+import * as _ from 'lodash';
 import express from 'express';
 import http from 'http';
 import socket from 'socket.io';
@@ -11,22 +12,20 @@ const io = socket(server);
 
 const port = 3000;
 const api = new Api();
-let total;
 const snapshots = {};
 
 api.on('initialize', () => {
-  console.log('init');
-  total = 0;
+  console.log('initialize');
 });
 
 api.on('visit', (visit) => {
-  let timestamp = visit.visitTimestamp;
-  const slot = determineIncrement(timestamp);
+  const slot = determineIncrement(visit.visitTimestamp);
   if (snapshots[slot] === undefined) {
-    snapshots[slot] = 0;
+    snapshots[slot] = {
+      total: 0,
+    };
   }
-  snapshots[slot]++;
-  total++;
+  snapshots[slot].total++;
 });
 
 function determineIncrement(n) {
@@ -34,14 +33,22 @@ function determineIncrement(n) {
 }
 
 io.on('connection', (socket) => {
-  console.log('test!');
+  console.log('connection');
+  socket.emit('total', getTotal(snapshots));
 
-  api.on('visit', () => { // literally emits per visit
-    socket.emit('total', total);
+  api.on('visit', () => {
+    // emits per visit to each socket
+    // if anyone is on the website when this starts up, their webpage shits the bed
+    socket.emit('total', getTotal(snapshots));
   });
-
-  socket.emit('total', total);
 });
+
+function getTotal(snaps) {
+  const totals = _.map(snaps, (s) => {
+    return s.total;
+  });
+  return _.sum(totals);
+}
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');
@@ -55,6 +62,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'good' });
   console.log(snapshots);
   console.log(Object.keys(snapshots).length);
+  console.log(getTotal(snapshots));
   res.end();
 });
 
