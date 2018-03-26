@@ -5,7 +5,9 @@
   "scripts": {
     "compile": "babel source --presets es2015,stage-2 -d distribution",
     "prestart": "npm run compile",
-    "start": "node ./distribution/index.js"
+    "start": "node ./distribution/index.js",
+    "pretest": "npm run compile",
+    "test": "mocha ./distribution/**/*.spec.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -16,6 +18,7 @@
     "axios": "^0.18.0",
     "express": "^4.16.3",
     "lodash": "^4.17.5",
+    "mocha": "^5.0.5",
     "moment": "^2.21.0",
     "mysql": "^2.15.0",
     "request": "^2.85.0",
