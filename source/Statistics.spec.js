@@ -1,5 +1,6 @@
 
 import Statistics from './Statistics';
+import assert from 'assert';
 
 describe('Statistics' , () => {
 
@@ -7,12 +8,12 @@ describe('Statistics' , () => {
 
       it('count', () => {
         let visits = [];
-        let stats = new Statistics(visits);
-        visits.push('a');
-        visits.push('a');
-        visits.push('a');
-        visits.push('a');
-        let count = stats.totalVisits();
+        let stats = new Statistics();
+        stats.addVisit('a');
+        stats.addVisit('a');
+        stats.addVisit('a');
+        let count = stats.get('TOTAL_VISITS');
+        assert.equal(count, 3);
       });
     });
 });
