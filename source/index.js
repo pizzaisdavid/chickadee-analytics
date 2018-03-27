@@ -52,6 +52,7 @@ io.on('connection', (socket) => {
 statistics.on('change', (name) => {
   const subscribers = subscriptions[name];
   const total = statistics.get(name);
+  console.log(`sending ${name} to ${subscribers.length} subscribers`)
   _.each(subscribers, (socket) => {
     socket.emit(TOTAL_VISITS, total);
   });
