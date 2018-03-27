@@ -33,35 +33,22 @@ describe('Statistics' , () => {
 
   describe('total visits ever', () => {
 
-    it('count', (done) => {
-      stats.on(RESOURCES.TOTAL_VISITS, (value) => {
-        assert.deepEqual(value, 3);
-        done();
-      });
+    it('count', () => {
       stats.addVisits(visits);
+      assert.deepEqual(stats.getTotalVisits(), 3);
     });
   });
 
   describe('heatmap', () => {
 
-    it('old visits should not count', (done) => {
-      stats.on(RESOURCES.VISITS_HEATMAP, (data) => {
-        assert.deepEqual(data, {
-          A: 1,
-        });
-        done();
-      });
+    it('old visits should not count', () => {
       stats.addVisits(visits);
+      assert.deepEqual(stats.getHeatmap(), {
+        A: 1,
+      });
     });
 
-    it('old visits should not count', (done) => {
-      stats.on(RESOURCES.VISITS_HEATMAP, (data) => {
-        assert.deepEqual(data, {
-          A: 2,
-          B: 1,
-        });
-        done();
-      });
+    it('old visits should not count', () => {
       visits.push({
         visitTimestamp: 25,
         feederID: 'B',
@@ -73,6 +60,10 @@ describe('Statistics' , () => {
         rfid: 'a'
       });
       stats.addVisits(visits);
+      assert.deepEqual(stats.getHeatmap(), {
+        A: 2,
+        B: 1,
+      });
     });
   });
 });

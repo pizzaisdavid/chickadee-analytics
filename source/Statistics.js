@@ -1,18 +1,15 @@
 
 import * as _ from 'lodash';
 
-import { EventEmitter } from 'events';
-
 export const RESOURCES = {
   TOTAL_VISITS: 'TOTAL_VISITS',
   VISITS_MINUTE: 'VISITS_MINUTE',
   VISITS_HEATMAP: 'VISITS_HEATMAP',
 };
 
-export class Statistics extends EventEmitter {
+export class Statistics {
 
   constructor(config, clock) {
-    super();
     this.visits = {};
     this.config = config;
     this.clock = clock;
@@ -26,17 +23,13 @@ export class Statistics extends EventEmitter {
       x.push(v);
       this.visits[i] = x;
     });
-    this.refresh([
-      RESOURCES.TOTAL_VISITS,
-      RESOURCES.VISITS_HEATMAP,
-    ]);
-    this.length = _.sum(_.map(this.visits, 'length'));
-    this.frequency = this.heatmap();
-    this.notify(RESOURCES.TOTAL_VISITS, this.length);
-    this.notify(RESOURCES.VISITS_HEATMAP, this.frequency);
   }
 
-  heatmap() {
+  getTotalVisits() {
+    return _.sum(_.map(this.visits, 'length'));
+  }
+
+  getHeatmap() {
     const now = this.clock.time;
     const duration = this.config[RESOURCES.VISITS_HEATMAP].duration;
     const oldestUnixTimestampAllowed = now - duration;
@@ -45,16 +38,5 @@ export class Statistics extends EventEmitter {
     })));
     const counts = _.countBy(recentVisits, 'feederID');
     return counts;
-  }
-
-  refresh(names) {
-    _.each(names, (name) => {
-
-    });
-  }
-
-  notify(name, data) {
-    this.emit('change', name, data);
-    this.emit(name, data);
   }
 }

@@ -35,9 +35,16 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
-  console.log(statistics.frequency);
+  res.end();
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    'TOTAL_VISITS' : statistics.getTotalVisits(),
+    'RECENT_VISITS_BY_MINUTE': statistics.getRecentVisitsByMinute(),
+  });
   res.end();
 });
 
