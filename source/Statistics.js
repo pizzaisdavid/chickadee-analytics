@@ -30,7 +30,6 @@ export class Statistics extends EventEmitter {
       RESOURCES.TOTAL_VISITS,
       RESOURCES.VISITS_HEATMAP,
     ]);
-    console.log(this.visits);
     this.length = _.map(this.visits, 'length').sum();
     this.frequency = this.heatmap();
     this.notify(RESOURCES.TOTAL_VISITS, this.length);
@@ -44,8 +43,6 @@ export class Statistics extends EventEmitter {
     const recentVisits = _.flatten(_.values(_.pickBy(this.visits, (visits, timestamp) => {
       return timestamp >= oldestUnixTimestampAllowed;
     })));
-    console.log('recents');
-    console.log(recentVisits);
     const counts = _.countBy(recentVisits, 'feederID');
     return counts;
   }
