@@ -53,5 +53,26 @@ describe('Statistics' , () => {
       });
       stats.addVisits(visits);
     });
+
+    it('old visits should not count', (done) => {
+      stats.on(RESOURCES.VISITS_HEATMAP, (data) => {
+        assert.deepEqual(data, {
+          A: 2,
+          B: 1,
+        });
+        done();
+      });
+      visits.push({
+        visitTimestamp: 25,
+        feederID: 'B',
+        rfid: 'c'
+      });
+      visits.push({
+        visitTimestamp: 20,
+        feederID: 'A',
+        rfid: 'a'
+      });
+      stats.addVisits(visits);
+    });
   });
 });

@@ -41,9 +41,11 @@ export class Statistics extends EventEmitter {
     const now = this.clock.time;
     const duration = this.config[RESOURCES.VISITS_HEATMAP].duration;
     const oldestUnixTimestampAllowed = now - duration;
-    const recentVisits = _.values(..._.pickBy(this.visits, (visits, timestamp) => {
+    const recentVisits = _.flatten(_.values(_.pickBy(this.visits, (visits, timestamp) => {
       return timestamp >= oldestUnixTimestampAllowed;
-    }));
+    })));
+    console.log('recents');
+    console.log(recentVisits);
     const counts = _.countBy(recentVisits, 'feederID');
     return counts;
   }
