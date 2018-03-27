@@ -68,6 +68,7 @@ app.use(function (req, res, next) {
 
 app.get('/health', (req, res) => {
   res.json({ status: 'good' });
+  console.log(statistics.frequency);
   res.end();
 });
 
