@@ -1,19 +1,24 @@
 
-import Statistics from './Statistics';
+import { RESOURCES, Statistics } from './Statistics';
 import assert from 'assert';
 
 describe('Statistics' , () => {
 
     describe('total visits', () => {
+      let visits;
+      let stats;
 
-      it('count', () => {
-        let visits = [];
-        let stats = new Statistics();
-        stats.addVisit('a');
-        stats.addVisit('a');
-        stats.addVisit('a');
-        let count = stats.get('TOTAL_VISITS');
-        assert.equal(count, 3);
+      beforeEach(() => {
+        visits = ['a', 'b', 'c'];
+        stats = new Statistics();
+      });
+
+      it('count', (done) => {
+        stats.on(RESOURCES.TOTAL_VISITS, (value) => {
+          assert.equal(value, 3);
+          done();
+        });
+        stats.addVisits(visits);
       });
     });
 });
