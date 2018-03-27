@@ -3,6 +3,12 @@ import { EventEmitter } from "events";
 
 export default class Statistics extends EventEmitter {
 
+  static get RESOURCES() {
+    return [
+      'TOTAL_VISITS',
+    ];
+  }
+
   constructor() {
     super();
     this.visits = [];
