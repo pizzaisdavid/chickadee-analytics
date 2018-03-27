@@ -10,6 +10,7 @@ export default class Statistics extends EventEmitter {
 
   addVisit(visit) {
     this.visits.push(visit);
+    this.emit('change', 'TOTAL_VISITS');
   }
 
   get(name) {
