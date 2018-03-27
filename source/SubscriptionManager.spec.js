@@ -25,7 +25,7 @@ describe('SubscriptionManager' , () => {
 
     it('success', () => {
       manager.subscribe(socket1, RESOURCE_NAME_1);
-      assert.equal(manager.count(RESOURCE_NAME_1), 1);
+      assert.deepEqual(manager.count(RESOURCE_NAME_1), 1);
     });
 
     it('with invalid resource name', () => {
@@ -38,12 +38,12 @@ describe('SubscriptionManager' , () => {
     it('success', () => {
       manager.subscribe(socket1, RESOURCE_NAME_1);
       manager.unsubscribe(socket1, RESOURCE_NAME_1);
-      assert.equal(manager.count(RESOURCE_NAME_1), 0);
+      assert.deepEqual(manager.count(RESOURCE_NAME_1), 0);
     });
 
     it('non-tracked socket', () => {
       manager.unsubscribe(socket1, RESOURCE_NAME_1);
-      assert.equal(manager.count(RESOURCE_NAME_1), 0);
+      assert.deepEqual(manager.count(RESOURCE_NAME_1), 0);
     });
 
     it('with invalid resource name', () => {
@@ -57,14 +57,14 @@ describe('SubscriptionManager' , () => {
       manager.subscribe(socket1, RESOURCE_NAME_1);
       manager.subscribe(socket1, RESOURCE_NAME_2);
       manager.remove(socket1);
-      assert.equal(manager.count(RESOURCE_NAME_1), 0);
-      assert.equal(manager.count(RESOURCE_NAME_2), 0);
+      assert.deepEqual(manager.count(RESOURCE_NAME_1), 0);
+      assert.deepEqual(manager.count(RESOURCE_NAME_2), 0);
     });
 
     it('non-tracked', () => {
       manager.remove(socket1);
-      assert.equal(manager.count(RESOURCE_NAME_1), 0);
-      assert.equal(manager.count(RESOURCE_NAME_2), 0);
+      assert.deepEqual(manager.count(RESOURCE_NAME_1), 0);
+      assert.deepEqual(manager.count(RESOURCE_NAME_2), 0);
     });
   });
 
@@ -76,7 +76,7 @@ describe('SubscriptionManager' , () => {
       manager.push(RESOURCE_NAME_1, (x) => {
         count++;
       });
-      assert.equal(count, 1);
+      assert.deepEqual(count, 1);
     });
   });
 });

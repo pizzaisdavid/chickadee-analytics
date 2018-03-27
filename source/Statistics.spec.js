@@ -35,7 +35,7 @@ describe('Statistics' , () => {
 
     it('count', (done) => {
       stats.on(RESOURCES.TOTAL_VISITS, (value) => {
-        assert.equal(value, 3);
+        assert.deepEqual(value, 3);
         done();
       });
       stats.addVisits(visits);
