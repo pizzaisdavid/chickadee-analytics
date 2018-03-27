@@ -1,13 +1,11 @@
 
-import { EventEmitter } from "events";
+import { EventEmitter } from 'events';
+
+export const RESOURCES = {
+  TOTAL_VISITS: 'TOTAL_VISITS',
+}
 
 export default class Statistics extends EventEmitter {
-
-  static get RESOURCES() {
-    return [
-      'TOTAL_VISITS',
-    ];
-  }
 
   constructor() {
     super();
@@ -16,11 +14,11 @@ export default class Statistics extends EventEmitter {
 
   addVisit(visit) {
     this.visits.push(visit);
-    this.emit('change', 'TOTAL_VISITS');
+    this.emit('change', RESOURCES.TOTAL_VISITS);
   }
 
   get(name) {
-    if (name === 'TOTAL_VISITS') {
+    if (name === RESOURCES.TOTAL_VISITS) {
       return this.visits.length;
     }
   }

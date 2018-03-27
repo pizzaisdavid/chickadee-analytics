@@ -36,8 +36,11 @@ export default class SubscriptionManager {
     });
   }
 
-  queue(resourceName, newValue) {
-
+  push(name, callback) {
+    const collection = this.resources[name];
+    if (!collection) {
+      return false;
+    }
+    _.each(collection, callback);
   }
-
 }

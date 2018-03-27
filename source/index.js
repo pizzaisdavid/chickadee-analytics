@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
   socket.on('subscribe', (name) => {
     manager.subscribe(socket, name);
-    //socket.emit(name, statistics.get(name));
+    socket.emit(name, statistics.get(name));
   });
 
   socket.on('unsubscribe', (name) => {
@@ -44,13 +44,12 @@ io.on('connection', (socket) => {
   });
 });
 
-statistics.on('change', (name) => {
-  manager.queue(name, statistics.get(name));
+statistics.on('change', (name, value) => {
+  manager.push(name, (socket) => {
+    console.log(name);
+    socket.emit(name, value);
+  });
 });
-
-setInterval(() => {
-  manager.push();
-}, 1500);
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');

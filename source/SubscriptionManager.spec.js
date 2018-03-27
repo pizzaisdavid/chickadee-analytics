@@ -61,10 +61,22 @@ describe('SubscriptionManager' , () => {
       assert.equal(manager.count(RESOURCE_NAME_2), 0);
     });
 
-    it('success', () => {
+    it('non-tracked', () => {
       manager.remove(socket1);
       assert.equal(manager.count(RESOURCE_NAME_1), 0);
       assert.equal(manager.count(RESOURCE_NAME_2), 0);
+    });
+  });
+
+  describe('push', () => {
+
+    it('success', () => {
+      manager.subscribe(socket1, RESOURCE_NAME_1);
+      let count = 0;
+      manager.push(RESOURCE_NAME_1, (x) => {
+        count++;
+      });
+      assert.equal(count, 1);
     });
   });
 });
