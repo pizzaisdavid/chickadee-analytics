@@ -54,6 +54,7 @@ statistics.on('change', (name) => {
   const total = statistics.get(name);
   console.log(`sending ${name} to ${subscribers.size} subscribers`)
   _.each(subscribers, (socket) => {
+    console.log('test');
     socket.emit(name, total);
   });
 });
