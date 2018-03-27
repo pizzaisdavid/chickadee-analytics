@@ -43,7 +43,14 @@ export class Statistics {
 
   getRecentVisitsByMinute() {
     const now = this.clock.time;
+    const duration = this.config[RESOURCES.RECENT_VISITS_BY_MINUTE].duration;
+    const oldestUnixTimestampAllowed = now - duration;
+    const times = _.range(oldestUnixTimestampAllowed, now);
     const grouping = {};
+    _.each(times, (t) => {
+      grouping[t] = 0;
+    });
+    console.log(grouping);
 
     return grouping;
   }

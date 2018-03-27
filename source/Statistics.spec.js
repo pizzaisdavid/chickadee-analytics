@@ -27,7 +27,11 @@ describe('Statistics' , () => {
     stats = new Statistics({
       [RESOURCES.VISITS_HEATMAP]: {
         duration: 10,
-      }
+      },
+      [RESOURCES.RECENT_VISITS_BY_MINUTE]: {
+        duration: 5,
+        grouping: 1,
+      },
     }, clock);
   });
 
@@ -53,8 +57,7 @@ describe('Statistics' , () => {
         visitTimestamp: 25,
         feederID: 'B',
         rfid: 'c'
-      });
-      visits.push({
+      }, {
         visitTimestamp: 20,
         feederID: 'A',
         rfid: 'a'
@@ -63,6 +66,56 @@ describe('Statistics' , () => {
       assert.deepEqual(stats.getHeatmap(), {
         A: 2,
         B: 1,
+      });
+    });
+  });
+
+    describe('total visits ever', () => {
+
+    it('count', () => {
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getTotalVisits(), 3);
+    });
+  });
+
+  describe('heatmap', () => {
+
+    it('old visits should not count', () => {
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getHeatmap(), {
+        A: 1,
+      });
+    });
+
+    it('old visits should not count', () => {
+      visits.push({
+        visitTimestamp: 25,
+        feederID: 'B',
+        rfid: 'c'
+      }, {
+        visitTimestamp: 20,
+        feederID: 'A',
+        rfid: 'a'
+      });
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getHeatmap(), {
+        A: 2,
+        B: 1,
+      });
+    });
+  });
+
+  describe('recent visit map', () => {
+
+    it('test', () => {
+
+      stats.addVisits([]);
+      assert.deepEqual(stats.getRecentVisitsByMinute(), {
+        24: 0,
+        23: 0,
+        22: 0,
+        21: 0,
+        20: 0,
       });
     });
   });
