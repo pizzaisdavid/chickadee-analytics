@@ -1,0 +1,3 @@
+
+in the case of heatmap,
+if a visit was older than an hour, it would still emit change

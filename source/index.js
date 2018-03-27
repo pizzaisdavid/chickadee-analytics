@@ -5,7 +5,7 @@ import http from 'http';
 import socket from 'socket.io';
 
 import Api from './Api';
-import Statistics from './Statistics';
+import { RESOURCES, Statistics } from './Statistics';
 import SubscriptionManager from './SubscriptionManager';
 
 const app = express();
@@ -13,9 +13,13 @@ const server = http.createServer(app);
 const io = socket(server);
 
 const port = 3000;
-const statistics = new Statistics();
+const statistics = new Statistics({
+  [RESOURCES.VISITS_HEATMAP]: {
+    duration: 3600,
+  },
+});
 const api = new Api();
-const manager = new SubscriptionManager(Statistics.RESOURCES);
+const manager = new SubscriptionManager(RESOURCES);
 
 api.on('initialize', () => {
   console.log('initialize');
