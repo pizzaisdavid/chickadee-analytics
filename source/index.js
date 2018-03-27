@@ -16,7 +16,7 @@ const statistics = new Statistics();
 const api = new Api();
 
 const subscriptions = {
-  'TOTAL_VISITS': new Set(),
+  'TOTAL_VISITS': [],
 };
 
 api.on('initialize', () => {
@@ -31,20 +31,20 @@ io.on('connection', (socket) => {
   console.log('connection');
 
   socket.on('subscribe', (name) => {
-    subscriptions[name].add(socket);
+    subscriptions[name].push(socket);
     socket.emit(name, statistics.get(name));
   });
 
   socket.on('unsubscribe', (name) => {
     console.log(`someone unsubscribed from ${name}`);
-    subscriptions[name].delete(socket);
+    //subscriptions[name].delete(socket);
   });
 
   socket.on('disconnect', () => {
     // TODO test this
     console.log('disconnect');
     _.each(subscriptions, (sockets, name) => {
-      sockets.delete(socket);
+      //sockets.delete(socket);
     })
   });
 });
