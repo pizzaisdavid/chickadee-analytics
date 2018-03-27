@@ -30,7 +30,7 @@ export class Statistics extends EventEmitter {
       RESOURCES.TOTAL_VISITS,
       RESOURCES.VISITS_HEATMAP,
     ]);
-    this.length = _.map(this.visits, 'length').sum();
+    this.length = _.sum(_.map(this.visits, 'length'));
     this.frequency = this.heatmap();
     this.notify(RESOURCES.TOTAL_VISITS, this.length);
     this.notify(RESOURCES.VISITS_HEATMAP, this.frequency);
