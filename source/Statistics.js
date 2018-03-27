@@ -5,6 +5,7 @@ export const RESOURCES = {
   TOTAL_VISITS: 'TOTAL_VISITS',
   VISITS_MINUTE: 'VISITS_MINUTE',
   VISITS_HEATMAP: 'VISITS_HEATMAP',
+  RECENT_VISITS_BY_MINUTE: 'RECENT_VISITS_BY_MINUTE',
 };
 
 export class Statistics {
@@ -38,5 +39,12 @@ export class Statistics {
     })));
     const counts = _.countBy(recentVisits, 'feederID');
     return counts;
+  }
+
+  getRecentVisitsByMinute() {
+    const now = this.clock.time;
+    const grouping = {};
+
+    return grouping;
   }
 }

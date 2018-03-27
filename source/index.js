@@ -13,7 +13,11 @@ const port = 3000;
 const clock = new Clock();
 const statistics = new Statistics({
   [RESOURCES.VISITS_HEATMAP]: {
-    duration: 3600,
+    duration: 100000,
+  },
+  [RESOURCES.RECENT_VISITS_BY_MINUTE]: {
+    duration: 60 * 60 * 24,
+    grouping: 60,
   },
 }, clock);
 const api = new Api();
@@ -43,7 +47,8 @@ app.get('/api/health', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     'TOTAL_VISITS' : statistics.getTotalVisits(),
-    'RECENT_VISITS_BY_MINUTE': statistics.getRecentVisitsByMinute(),
+    'VISITS_HEATMAP' : statistics.getHeatmap(),
+    [RESOURCES.RECENT_VISITS_BY_MINUTE]: statistics.getRecentVisitsByMinute(),
   });
   res.end();
 });
