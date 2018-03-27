@@ -7,17 +7,19 @@ import socket from 'socket.io';
 import Api from './Api';
 import { RESOURCES, Statistics } from './Statistics';
 import SubscriptionManager from './SubscriptionManager';
+import { Clock } from './Clock';
 
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
 
 const port = 3000;
+const clock = new Clock();
 const statistics = new Statistics({
   [RESOURCES.VISITS_HEATMAP]: {
     duration: 3600,
   },
-});
+}, clock);
 const api = new Api();
 const manager = new SubscriptionManager(RESOURCES);
 
@@ -25,8 +27,9 @@ api.on('initialize', () => {
   console.log('initialize');
 });
 
-api.on('visit', (v) => {
-  statistics.addVisit(v);
+api.on('visits', (v) => {
+  console.log('VISITS');
+  statistics.addVisits(v);
 });
 
 io.on('connection', (socket) => {
