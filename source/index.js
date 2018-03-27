@@ -6,6 +6,7 @@ import socket from 'socket.io';
 
 import Api from './Api';
 import Statistics from './Statistics';
+import SubscriptionManager from './SubscriptionManager';
 
 const app = express();
 const server = http.createServer(app);
@@ -14,10 +15,7 @@ const io = socket(server);
 const port = 3000;
 const statistics = new Statistics();
 const api = new Api();
-
-const subscriptions = {
-  'TOTAL_VISITS': [],
-};
+const manager = new SubscriptionManager(Statistics.RESOURCES);
 
 api.on('initialize', () => {
   console.log('initialize');
@@ -31,33 +29,28 @@ io.on('connection', (socket) => {
   console.log('connection');
 
   socket.on('subscribe', (name) => {
-    subscriptions[name].push(socket);
-    socket.emit(name, statistics.get(name));
+    manager.subscribe(socket, name);
+    //socket.emit(name, statistics.get(name));
   });
 
   socket.on('unsubscribe', (name) => {
     console.log(`someone unsubscribed from ${name}`);
-    //subscriptions[name].delete(socket);
+    manager.unsubscribe(socket, name);
   });
 
   socket.on('disconnect', () => {
-    // TODO test this
     console.log('disconnect');
-    _.each(subscriptions, (sockets, name) => {
-      //sockets.delete(socket);
-    })
+    manager.remove(socket);
   });
 });
 
 statistics.on('change', (name) => {
-  const subscribers = subscriptions[name];
-  const total = statistics.get(name);
-  console.log(`sending ${name} to ${subscribers.size} subscribers`)
-  _.each(subscribers, (socket) => {
-    console.log('test');
-    socket.emit(name, total);
-  });
+  manager.queue(name, statistics.get(name));
 });
+
+setInterval(() => {
+  manager.push();
+}, 1500);
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');
