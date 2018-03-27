@@ -19,14 +19,6 @@ const subscriptions = {
   'TOTAL_VISITS': new Set(),
 };
 
-const cooldowns = {
-  'TOTAL_VISITS': 5,
-}
-
-const pushTimestamps = {
-  'TOTAL_VISITS': 0,
-}
-
 api.on('initialize', () => {
   console.log('initialize');
 });
@@ -57,18 +49,13 @@ io.on('connection', (socket) => {
   });
 });
 
-api.on('visit', () => {
-  const subscribers = subscriptions['TOTAL_VISITS'];
-  const total = statistics.get('TOTAL_VISITS');
+statistics.on('change', (name) => {
+  const subscribers = subscriptions[name];
+  const total = statistics.get(name);
   _.each(subscribers, (socket) => {
     socket.emit(TOTAL_VISITS, total);
   });
 });
-
-function spamCheck(text) {
-  const now = Date.now() / 1000;
-  return pushTimestamps[text] + cooldowns[text] <= now;
-} 
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');

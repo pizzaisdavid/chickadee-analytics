@@ -1,9 +1,10 @@
 
 import { EventEmitter } from "events";
 
-export default class Statistics {
+export default class Statistics extends EventEmitter {
 
   constructor() {
+    super();
     this.visits = [];
   }
 
