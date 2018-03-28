@@ -90,6 +90,10 @@ export class Statistics {
       });
     });
 
+    _.each(this.visits, (visit) => {
+      x[visit.rfid][visit.feederID]++;
+    });
+
     return x;
   }
 }

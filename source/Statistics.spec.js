@@ -143,5 +143,16 @@ describe('Statistics' , () => {
         c: { A: 0, B: 0 },
       });
     });
+
+    it('visits', () => {
+      stats.addFeeders(feeders);
+      stats.addBirds(birds);
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getEachBirdsFeederVisits(), {
+        a: { A: 1, B: 0 },
+        b: { A: 1, B: 0 },
+        c: { A: 0, B: 1 },
+      });
+    });
   });
 });
