@@ -11,9 +11,40 @@ export const RESOURCES = {
 export class Statistics {
 
   constructor(config, clock) {
+    this.feeders = {};
+    this.birds = {};
     this.visits = {};
     this.config = config;
     this.clock = clock;
+  }
+
+  add(name, list) {
+    if (name === 'FEEDERS') {
+      this.addFeeders(list);
+    } else if (name === 'BIRDS') {
+      this.addBirds(list);
+    } else if (name === 'VISITS') {
+      this.addVisits(list);
+    }
+  }
+
+  addBirds(birds) {
+    _.each(birds, (b) => {
+      const id = b.rfid;
+      this.birds[id] = {
+        feeders: {}, // TODO add current feeders!
+      };
+    });
+  }
+
+  addFeeders(feeders) {
+    _.each(feeders, (f) => {
+      const id = f.id;
+      this.feeders[id] = {
+        longitude: f.longitude,
+        latitude: f.latitude,
+      };
+    });
   }
 
   addVisits(visits) {

@@ -1,7 +1,6 @@
 
 import * as _ from 'lodash';
 import express from 'express';
-import http from 'http';
 
 import Api from './Api';
 import { Clock } from './Clock';
@@ -22,13 +21,13 @@ const statistics = new Statistics({
 }, clock);
 const api = new Api();
 
-api.on('initialize', () => {
+api.on(Api.EVENTS.INITIALIZE, () => {
   console.log('initialize');
 });
 
-api.on('visits', (v) => {
-  console.log('VISITS');
-  statistics.addVisits(v);
+api.on(Api.EVENTS.NEW, (name, list) => {
+  console.log(`new ${name}`);
+  statistics.add(name, list);
 });
 
 app.use(function (req, res, next) {
@@ -49,6 +48,15 @@ app.get('/api', (req, res) => {
     [RESOURCES.TOTAL_VISITS]: statistics.getTotalVisits(),
     [RESOURCES.VISITS_HEATMAP]: statistics.getHeatmap(),
     [RESOURCES.RECENT_VISITS_BY_MINUTE]: statistics.getRecentVisitsByMinute(),
+  });
+  res.end();
+});
+
+app.get('/api/stuff', (req, res) => {
+  res.json({
+    [Api.RESOURCES.FEEDERS]: statistics.feeders,
+    [Api.RESOURCES.BIRDS]: statistics.birds,
+    [Api.RESOURCES.VISITS]: statistics.visits.length,
   });
   res.end();
 });
