@@ -155,4 +155,27 @@ describe('Statistics' , () => {
       });
     });
   });
+
+  describe('a birds feeder visits', () => {
+
+    it('empty', () => {
+      stats.addFeeders(feeders);
+      stats.addBirds(birds);
+      stats.addVisits([]);
+      assert.deepEqual(stats.getBirdsFeederVisits('a'), {
+        A: 0,
+        B: 0,
+      });
+    });
+
+    it('simple', () => {
+      stats.addFeeders(feeders);
+      stats.addBirds(birds);
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getBirdsFeederVisits('a'), {
+        A: 1,
+        B: 0,
+      });
+    });
+  });
 });

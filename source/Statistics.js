@@ -96,4 +96,24 @@ export class Statistics {
 
     return x;
   }
+
+  getBirdsFeederVisits(id) {
+    // TODO check if it is a valid bird
+    const relation = {};
+    _.each(this.feeders, (feeder) => {
+      relation[feeder.id] = 0;
+    });
+
+    const selectedVisits = _.filter(this.visits, (visit) => {
+      return visit.rfid === id;
+    });
+
+    // use count by?
+    _.each(selectedVisits, (visit) => {
+      const id = visit.feederID;
+      relation[id]++;
+    });
+
+    return relation;
+  }
 }
