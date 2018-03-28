@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "./distribution/index.js",
   "scripts": {
+    "precompile": "rm -rf ./distribution",
     "compile": "babel source --presets es2015,stage-2 -d distribution",
     "prestart": "npm run compile",
     "start": "node ./distribution/index.js",
