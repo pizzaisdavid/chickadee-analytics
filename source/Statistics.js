@@ -92,4 +92,17 @@ export class Statistics {
     });
     return group;
   }
+
+  getEachBirdsFeederVisits() {
+    const x = {};
+
+    _.each(this.birds, (value, rfid) => {
+      x[rfid] = {};
+      _.each(this.feeders, (v, id) => {
+        x[rfid][id] = 0;
+      });
+    });
+
+    return x;
+  }
 }
