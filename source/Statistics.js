@@ -44,14 +44,21 @@ export class Statistics {
   getRecentVisitsByMinute() {
     const now = this.clock.time;
     const duration = this.config[RESOURCES.RECENT_VISITS_BY_MINUTE].duration;
+    const grouping = this.config[RESOURCES.RECENT_VISITS_BY_MINUTE].grouping;
     const oldestUnixTimestampAllowed = now - duration;
     const times = _.range(oldestUnixTimestampAllowed, now);
-    const grouping = {};
+    const group = {};
     _.each(times, (t) => {
-      grouping[t] = 0;
+      const d = Math.ceil(t / grouping) * grouping;
+      group[d] = 0;
     });
-    console.log(grouping);
-
-    return grouping;
+    const vs = _.pickBy(this.visits, (value, key) => {
+      return key >= oldestUnixTimestampAllowed;
+    });
+    _.each(vs, (value, key) => {
+      const d = Math.ceil(key / grouping) * grouping;
+      group[d] += value.length;
+    });
+    return group;
   }
 }

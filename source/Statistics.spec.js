@@ -6,6 +6,7 @@ describe('Statistics' , () => {
   let visits;
   let clock;
   let stats;
+  let config;
 
   beforeEach(() => {
     visits = [
@@ -24,7 +25,7 @@ describe('Statistics' , () => {
       },
     ];
     clock = { time: 25 };
-    stats = new Statistics({
+    config = {
       [RESOURCES.VISITS_HEATMAP]: {
         duration: 10,
       },
@@ -32,7 +33,8 @@ describe('Statistics' , () => {
         duration: 5,
         grouping: 1,
       },
-    }, clock);
+    };
+    stats = new Statistics(config, clock);
   });
 
   describe('total visits ever', () => {
@@ -105,10 +107,9 @@ describe('Statistics' , () => {
     });
   });
 
-  describe('recent visit map', () => {
+  describe('recent visit count by timestamp', () => {
 
-    it('test', () => {
-
+    it('empty', () => {
       stats.addVisits([]);
       assert.deepEqual(stats.getRecentVisitsByMinute(), {
         24: 0,
@@ -116,6 +117,29 @@ describe('Statistics' , () => {
         22: 0,
         21: 0,
         20: 0,
+      });
+    });
+
+    it('increment', () => {
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getRecentVisitsByMinute(), {
+        24: 0,
+        23: 0,
+        22: 0,
+        21: 0,
+        20: 1,
+      });
+    });
+
+    it('increment', () => {
+      config[RESOURCES.RECENT_VISITS_BY_MINUTE] = {
+        duration: 25,
+        grouping: 25
+      }
+      stats.addVisits(visits);
+      assert.deepEqual(stats.getRecentVisitsByMinute(), {
+        25: 2,
+        0: 1,
       });
     });
   });
