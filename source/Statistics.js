@@ -11,9 +11,9 @@ export const RESOURCES = {
 export class Statistics {
 
   constructor(config, clock) {
-    this.feeders = {};
-    this.birds = {};
-    this.visits = {};
+    this.feeders = [];
+    this.birds = [];
+    this.visits = [];
     this.config = config;
     this.clock = clock;
   }
@@ -29,45 +29,29 @@ export class Statistics {
   }
 
   addBirds(birds) {
-    _.each(birds, (b) => {
-      const id = b.rfid;
-      this.birds[id] = {
-        feeders: {}, // TODO add current feeders!
-      };
-    });
+    this.birds.push(...birds);
   }
 
   addFeeders(feeders) {
-    _.each(feeders, (f) => {
-      const id = f.id;
-      this.feeders[id] = {
-        longitude: f.longitude,
-        latitude: f.latitude,
-      };
-    });
+    this.feeders.push(...feeders);
   }
 
   addVisits(visits) {
-    _.each(visits, (v) => {
-      let i = v.visitTimestamp;
-      v = _.omit(v, 'visitTimestamp');
-      let x = _.get(this.visits, i, []);
-      x.push(v);
-      this.visits[i] = x;
-    });
+    this.visits.push(...visits);
   }
 
   getTotalVisits() {
-    return _.sum(_.map(this.visits, 'length'));
+    return this.visits.length;
   }
 
   getHeatmap() {
     const now = this.clock.time;
     const duration = this.config[RESOURCES.VISITS_HEATMAP].duration;
     const oldestUnixTimestampAllowed = now - duration;
-    const recentVisits = _.flatten(_.values(_.pickBy(this.visits, (visits, timestamp) => {
-      return timestamp >= oldestUnixTimestampAllowed;
-    })));
+
+    const recentVisits = _.filter(this.visits, (visit) => {
+      return visit.visitTimestamp >= oldestUnixTimestampAllowed;
+    });
     const counts = _.countBy(recentVisits, 'feederID');
     return counts;
   }
@@ -83,12 +67,15 @@ export class Statistics {
       const d = Math.ceil(t / grouping) * grouping;
       group[d] = 0;
     });
-    const vs = _.pickBy(this.visits, (value, key) => {
-      return key >= oldestUnixTimestampAllowed;
+
+    const recentVisits = _.filter(this.visits, (visit) => {
+      return visit.visitTimestamp >= oldestUnixTimestampAllowed;
     });
-    _.each(vs, (value, key) => {
-      const d = Math.ceil(key / grouping) * grouping;
-      group[d] += value.length;
+
+    _.each(recentVisits, (visit) => {
+      const timestamp = visit.visitTimestamp;
+      const d = Math.ceil(timestamp / grouping) * grouping;
+      group[d]++;
     });
     return group;
   }
@@ -96,10 +83,10 @@ export class Statistics {
   getEachBirdsFeederVisits() {
     const x = {};
 
-    _.each(this.birds, (value, rfid) => {
-      x[rfid] = {};
-      _.each(this.feeders, (v, id) => {
-        x[rfid][id] = 0;
+    _.each(this.birds, (bird) => {
+      x[bird.rfid] = {};
+      _.each(this.feeders, (feeder) => {
+        x[bird.rfid][feeder.id] = 0;
       });
     });
 

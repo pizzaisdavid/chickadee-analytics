@@ -76,7 +76,7 @@ describe('Statistics' , () => {
       });
     });
 
-    it('old visits should not count', () => {
+    it('more than one visit per feeder', () => {
       visits.push({
         visitTimestamp: 25,
         feederID: 'B',
@@ -118,7 +118,7 @@ describe('Statistics' , () => {
       });
     });
 
-    it('increment', () => {
+    it('grouping', () => {
       config[RESOURCES.RECENT_VISITS_BY_MINUTE] = {
         duration: 25,
         grouping: 25
