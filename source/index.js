@@ -16,7 +16,7 @@ const statistics = new Statistics({
     duration: 100000,
   },
   [RESOURCES.RECENT_VISITS_BY_MINUTE]: {
-    duration: 60 * 60 * 24,
+    duration: 60 * 60,
     grouping: 60,
   },
 }, clock);
