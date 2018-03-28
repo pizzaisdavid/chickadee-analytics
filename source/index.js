@@ -46,11 +46,15 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api', (req, res) => {
   res.json({
-    'TOTAL_VISITS' : statistics.getTotalVisits(),
-    'VISITS_HEATMAP' : statistics.getHeatmap(),
+    [RESOURCES.TOTAL_VISITS]: statistics.getTotalVisits(),
+    [RESOURCES.VISITS_HEATMAP]: statistics.getHeatmap(),
     [RESOURCES.RECENT_VISITS_BY_MINUTE]: statistics.getRecentVisitsByMinute(),
   });
   res.end();
+});
+
+app.get('/api/total', (req, res) => {
+  res.json({ 'visits' : statistics.getTotalVisits() });
 });
 
 app.listen(port, () => {
