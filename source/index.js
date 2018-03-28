@@ -9,7 +9,7 @@ import { RESOURCES, Statistics } from './Statistics';
 
 const app = express();
 
-const port = 3000;
+const port = 18156;
 const clock = new Clock();
 const statistics = new Statistics({
   [RESOURCES.VISITS_HEATMAP]: {
