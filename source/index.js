@@ -1,12 +1,26 @@
 
 import * as _ from 'lodash';
 import express from 'express';
+import cors from 'cors';
 
 import Api from './Api';
 import { Clock } from './Clock';
 import { RESOURCES, Statistics } from './Statistics';
 
 const app = express();
+
+app.use(cors());
+
+var whitelist = ['http://localhost:8082', 'http://euclid.nmu.edu']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 const port = 18156;
 const clock = new Clock();
@@ -28,14 +42,6 @@ api.on(Api.EVENTS.INITIALIZE, () => {
 api.on(Api.EVENTS.NEW, (name, list) => {
   console.log(`new ${name}`);
   statistics.add(name, list);
-});
-
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8082');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
 });
 
 app.get('/api/health', (req, res) => {
