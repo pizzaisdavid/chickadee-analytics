@@ -61,8 +61,12 @@ app.get('/api/stuff', (req, res) => {
   res.end();
 });
 
-app.get('/api/total', (req, res) => {
+app.get('/api/visits/total', (req, res) => {
   res.json({ 'visits' : statistics.getTotalVisits() });
+});
+
+app.get('/api/birds/:id/feeders', (req, res) => {
+  res.json(statistics.getBirdsFeederVisits(req.params.id));
 });
 
 app.listen(port, () => {

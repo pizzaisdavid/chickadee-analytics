@@ -37,7 +37,8 @@ export class Statistics {
   }
 
   addVisits(visits) {
-    this.visits.push(...visits);
+    // is there a better way?
+    this.visits = this.visits.concat(visits);
   }
 
   getTotalVisits() {
