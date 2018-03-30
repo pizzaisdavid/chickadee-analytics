@@ -1,5 +1,5 @@
 
-import { RESOURCES, Statistics } from './Statistics';
+import { RESOURCES, DURATIONS, Statistics } from './Statistics';
 import assert from 'assert';
 
 describe('Statistics' , () => {
@@ -51,9 +51,9 @@ describe('Statistics' , () => {
       [RESOURCES.VISITS_HEATMAP]: {
         duration: 10,
       },
-      [RESOURCES.RECENT_VISITS_BY_MINUTE]: {
-        duration: 5,
-        grouping: 1,
+      [RESOURCES.RECENT_VISITS_SUMMARY]: {
+        duration: 25,
+        grouping: 5,
       },
     };
     stats = new Statistics(config, clock);

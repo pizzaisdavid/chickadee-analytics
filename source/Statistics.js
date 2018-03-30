@@ -3,10 +3,14 @@ import * as _ from 'lodash';
 
 export const RESOURCES = {
   TOTAL_VISITS: 'TOTAL_VISITS',
-  VISITS_MINUTE: 'VISITS_MINUTE',
   VISITS_HEATMAP: 'VISITS_HEATMAP',
-  RECENT_VISITS_BY_MINUTE: 'RECENT_VISITS_BY_MINUTE',
+  RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
 };
+
+export const DURATIONS = {
+  HOUR: 60 * 60,
+  MINUTE: 60,
+}
 
 export class Statistics {
 
@@ -57,10 +61,10 @@ export class Statistics {
     return counts;
   }
 
-  getRecentVisitsByMinute() {
+  getVisitsGroupedByTime() {
     const now = this.clock.time;
-    const duration = this.config[RESOURCES.RECENT_VISITS_BY_MINUTE].duration;
-    const grouping = this.config[RESOURCES.RECENT_VISITS_BY_MINUTE].grouping;
+    const duration = this.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
+    const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
     const oldestUnixTimestampAllowed = now - duration;
     const times = _.range(oldestUnixTimestampAllowed, now);
     const group = {};

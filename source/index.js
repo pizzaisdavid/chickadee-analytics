@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import Api from './Api';
 import { Clock } from './Clock';
-import { RESOURCES, Statistics } from './Statistics';
+import { RESOURCES, DURATIONS, Statistics } from './Statistics';
 
 const app = express();
 
@@ -28,9 +28,9 @@ const statistics = new Statistics({
   [RESOURCES.VISITS_HEATMAP]: {
     duration: 100000,
   },
-  [RESOURCES.RECENT_VISITS_BY_MINUTE]: {
-    duration: 60 * 60,
-    grouping: 60,
+  [RESOURCES.RECENT_VISITS_SUMMARY]: {
+    duration: DURATIONS.HOUR,
+    grouping: DURATIONS.MINUTE,
   },
 }, clock);
 const api = new Api();
