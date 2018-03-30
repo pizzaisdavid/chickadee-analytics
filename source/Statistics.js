@@ -100,18 +100,18 @@ export class Statistics {
 
   getBirdsFeederVisits(id) {
     // TODO check if it is a valid bird
-    const relation = {};
-    _.each(this.feeders, (feeder) => {
-      relation[feeder.id] = 0;
-    });
 
     const selectedVisits = _.filter(this.visits, (visit) => {
       return visit.rfid === id;
     });
 
     // use count by?
+    const relation = {};
     _.each(selectedVisits, (visit) => {
       const id = visit.feederID;
+      if (relation[id] === undefined) {
+        relation[id] = 0;
+      }
       relation[id]++;
     });
 
