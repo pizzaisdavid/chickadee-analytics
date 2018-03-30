@@ -98,33 +98,35 @@ describe('Statistics' , () => {
 
     it('empty', () => {
       stats.addVisits([]);
-      assert.deepEqual(stats.getRecentVisitsByMinute(), {
-        24: 0,
-        23: 0,
-        22: 0,
-        21: 0,
+      assert.deepEqual(stats.getVisitsGroupedByTime(), {
+        0: 0,
+        5: 0,
+        10: 0,
+        15: 0,
         20: 0,
+        25: 0,
       });
     });
 
     it('increment', () => {
       stats.addVisits(visits);
-      assert.deepEqual(stats.getRecentVisitsByMinute(), {
-        24: 0,
-        23: 0,
-        22: 0,
-        21: 0,
+      assert.deepEqual(stats.getVisitsGroupedByTime(), {
+        0: 1,
+        5: 0,
+        10: 1,
+        15: 0,
         20: 1,
+        25: 0,
       });
     });
 
     it('grouping', () => {
-      config[RESOURCES.RECENT_VISITS_BY_MINUTE] = {
+      config[RESOURCES.RECENT_VISITS_SUMMARY] = {
         duration: 25,
         grouping: 25
       }
       stats.addVisits(visits);
-      assert.deepEqual(stats.getRecentVisitsByMinute(), {
+      assert.deepEqual(stats.getVisitsGroupedByTime(), {
         25: 2,
         0: 1,
       });

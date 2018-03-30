@@ -53,7 +53,7 @@ app.get('/api', (req, res) => {
   res.json({
     [RESOURCES.TOTAL_VISITS]: statistics.getTotalVisits(),
     [RESOURCES.VISITS_HEATMAP]: statistics.getHeatmap(),
-    [RESOURCES.RECENT_VISITS_BY_MINUTE]: statistics.getRecentVisitsByMinute(),
+    [RESOURCES.RECENT_VISITS_SUMMARY]: statistics.getVisitsGroupedByTime(),
   });
   res.end();
 });
@@ -67,8 +67,8 @@ app.get('/api/stuff', (req, res) => {
   res.end();
 });
 
-app.get('/api/visits/total', (req, res) => {
-  res.json({ 'visits' : statistics.getTotalVisits() });
+app.get('/api/visits/summary', (req, res) => {
+  res.json(statistics.getVisitsGroupedByTime());
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
