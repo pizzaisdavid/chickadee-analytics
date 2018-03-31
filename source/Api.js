@@ -1,5 +1,6 @@
 
 import mysql from 'mysql';
+import * as _ from 'lodash';
 
 import { EventEmitter } from 'events';
 
@@ -63,8 +64,18 @@ export default class Api extends EventEmitter {
         console.log(error);
       }
       const feeders = results[0];
-      const birds = results[2];
-      const visits = results[4];
+      const rawBirds = results[2];
+      const rawVisits = results[4];
+      const birds = _.map(rawBirds, (bird) => {
+        return { id: bird.rfid };
+      });
+      const visits = _.map(rawVisits, (visit) => {
+        return {
+          timestamp: visit.visitTimestamp,
+          bird: visit.rfid,
+          feeder: visit.feederID,
+        };
+      });
       console.log(`FEEDERS=${feeders.length}, BIRDS=${birds.length}, VISITS=${visits.length}`);
       if (feeders.length > 0) {
         this.emit(Api.EVENTS.NEW, Api.RESOURCES.FEEDERS, feeders);
