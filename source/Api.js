@@ -56,9 +56,12 @@ export default class Api extends EventEmitter {
 
   listen() {
     this.connection.query(`
-    SELECT * FROM feeders WHERE isSynced=FALSE FOR UPDATE; UPDATE feeders SET isSynced=TRUE;
-    SELECT * FROM birds WHERE isSynced=FALSE FOR UPDATE; UPDATE birds SET isSynced=TRUE;
-    SELECT * FROM visits WHERE isSynced=FALSE FOR UPDATE; UPDATE visits SET isSynced=TRUE;
+    SELECT * FROM feeders WHERE isSynced=FALSE FOR UPDATE;
+    UPDATE feeders SET isSynced=TRUE;
+    SELECT * FROM birds WHERE isSynced=FALSE FOR UPDATE;
+    UPDATE birds SET isSynced=TRUE;
+    SELECT * FROM visits WHERE isSynced=FALSE ORDER BY visitTimestamp DESC FOR UPDATE;
+    UPDATE visits SET isSynced=TRUE;
     `, (error, results, fields) => {
       if (error) {
         console.log(error);
