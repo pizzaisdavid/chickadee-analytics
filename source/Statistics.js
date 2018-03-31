@@ -49,37 +49,25 @@ export class Statistics {
     return this.visits.length;
   }
 
-  getHeatmap() {
-    const now = this.clock.time;
-    const duration = this.config[RESOURCES.VISITS_HEATMAP].duration;
-    const oldestUnixTimestampAllowed = now - duration;
-
-    const recentVisits = _.filter(this.visits, (visit) => {
-      return visit.visitTimestamp >= oldestUnixTimestampAllowed;
-    });
-    const counts = _.countBy(recentVisits, 'feederID');
-    return counts;
-  }
-
   getVisitsGroupedByTime() {
-    const now = this.clock.time;
+    const now = this.clock.timestamp;
     const duration = this.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
     const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
     const oldestUnixTimestampAllowed = now - duration;
-    const times = _.range(oldestUnixTimestampAllowed, now);
+    const times = _.range(oldestUnixTimestampAllowed + 1, now);
     const group = {};
     _.each(times, (t) => {
-      const d = Math.ceil(t / grouping) * grouping;
+      const d = Math.floor(t / grouping) * grouping;
       group[d] = 0;
     });
 
     const recentVisits = _.filter(this.visits, (visit) => {
-      return visit.visitTimestamp >= oldestUnixTimestampAllowed;
+      return visit.timestamp >= oldestUnixTimestampAllowed;
     });
 
     _.each(recentVisits, (visit) => {
-      const timestamp = visit.visitTimestamp;
-      const d = Math.ceil(timestamp / grouping) * grouping;
+      const timestamp = visit.timestamp;
+      const d = Math.floor(timestamp / grouping) * grouping;
       group[d]++;
     });
     return group;
