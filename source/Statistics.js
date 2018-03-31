@@ -5,7 +5,6 @@ export const RESOURCES = {
   TOTAL_VISITS: 'TOTAL_VISITS',
   VISITS_HEATMAP: 'VISITS_HEATMAP',
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
-  ASSOCIATIONS: 'ASSOCIATIONS',
 };
 
 export const DURATIONS = {
@@ -54,13 +53,15 @@ export class Statistics {
     const now = this.clock.timestamp;
     const duration = this.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
     const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
-    const oldestUnixTimestampAllowed = now - duration;
-    const times = _.range(oldestUnixTimestampAllowed + 1, now);
-    const group = {};
-    _.each(times, (t) => {
+    const oldestUnixTimestampAllowed = now - duration + 1;
+
+    const times = _.range(oldestUnixTimestampAllowed, now);
+
+    const group = _.reduce(times, (object, t) => {
       const d = Math.floor(t / grouping) * grouping;
-      group[d] = 0;
-    });
+      object[d] = 0;
+      return object;
+    }, {});
     const recentVisits = _.filter(this.visits, (visit) => {
       return visit.timestamp >= oldestUnixTimestampAllowed;
     });
@@ -89,22 +90,5 @@ export class Statistics {
     });
 
     return relation;
-  }
-
-  getAssociationsForBird(id) {
-    const grouping = this.config[RESOURCES.ASSOCIATIONS].grouping;
-    const associations = {};
-    _.each(this.visits, (visit, index) => {
-      if (visit.bird === id) {
-        const filteredVisits = this.findGoodVisits(visit.timestamp, grouping, index, id);
-        console.log(filteredVisits);
-      }
-    });
-    return associations;
-  }
-
-  findGoodVisits(timestamp, limit, index, id) {
-    const visits = [];
-    return visits;
   }
 }

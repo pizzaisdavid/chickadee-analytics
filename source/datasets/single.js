@@ -9,9 +9,6 @@ export default {
       duration: 30,
       grouping: 10,
     },
-    [RESOURCES.ASSOCIATIONS]: {
-      grouping: 1,
-    },
   },
   birds: [{ id: 'a' }],
   feeders: [{ id: 'Z', longitude: 0, latitude: 0 }],

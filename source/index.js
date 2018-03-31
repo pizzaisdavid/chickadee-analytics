@@ -29,9 +29,6 @@ const statistics = new Statistics({
     duration: DURATIONS.HOUR,
     grouping: DURATIONS.MINUTE,
   },
-  [RESOURCES.ASSOCIATIONS]: {
-    grouping: 5000,
-  },
 }, clock);
 const api = new Api();
 
@@ -63,10 +60,6 @@ app.get('/api/visits/summary', (req, res) => {
 
 app.get('/api/birds/:id/feeders', (req, res) => {
   res.json(statistics.getBirdsFeederVisits(req.params.id));
-});
-
-app.get('/api/birds/assocations/:id/', (req, res) => {
-  res.json(statistics.getAssociationsForBird(req.params.id));
 });
 
 app.listen(port, () => {
