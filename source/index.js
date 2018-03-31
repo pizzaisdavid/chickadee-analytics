@@ -25,9 +25,6 @@ var corsOptions = {
 const port = 18156;
 const clock = new Clock();
 const statistics = new Statistics({
-  [RESOURCES.VISITS_HEATMAP]: {
-    duration: 100000,
-  },
   [RESOURCES.RECENT_VISITS_SUMMARY]: {
     duration: DURATIONS.HOUR,
     grouping: DURATIONS.MINUTE,
@@ -46,16 +43,6 @@ api.on(Api.EVENTS.NEW, (name, list) => {
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
-  res.end();
-});
-
-app.get('/api', (req, res) => {
-  res.json({
-    [RESOURCES.TOTAL_VISITS]: statistics.getTotalVisits(),
-    [RESOURCES.VISITS_HEATMAP]: statistics.getHeatmap(),
-    [RESOURCES.RECENT_VISITS_SUMMARY]: statistics.getVisitsGroupedByTime(),
-  });
-  res.end();
 });
 
 app.get('/api/stuff', (req, res) => {

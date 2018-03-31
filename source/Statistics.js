@@ -73,25 +73,7 @@ export class Statistics {
     return group;
   }
 
-  getEachBirdsFeederVisits() {
-    const x = {};
-
-    _.each(this.birds, (bird) => {
-      x[bird.rfid] = {};
-      _.each(this.feeders, (feeder) => {
-        x[bird.rfid][feeder.id] = 0;
-      });
-    });
-
-    _.each(this.visits, (visit) => {
-      x[visit.rfid][visit.feederID]++;
-    });
-
-    return x;
-  }
-
   getBirdsFeederVisits(id) {
-
     const selectedVisits = _.filter(this.visits, (visit) => {
       return visit.bird === id;
     });
