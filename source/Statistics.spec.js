@@ -7,7 +7,7 @@ import datasets from './datasets';
 
 describe('Statistics' , () => {
 
-  describe('ALL LIFETIME: visit total', () => {
+  describe('POPULATION LIFETIME: visit total', () => {
     _.map(datasets, (dataset) => {
       it(dataset.name, () => {
         const stats = new Statistics({}, dataset.clock);
@@ -17,7 +17,7 @@ describe('Statistics' , () => {
     });
   });
 
-  describe('ALL RECENT: visits over time', () => {
+  describe('POPULATION RECENT: visits over time', () => {
     _.map(datasets, (dataset) => {
       it(dataset.name, () => {
         const stats = new Statistics(dataset.config, dataset.clock);
@@ -27,7 +27,7 @@ describe('Statistics' , () => {
     });
   });
 
-  describe('SINGLE LIFETIME: get feeder checkins', () => {
+  describe('INDIVIDUAL LIFETIME: get feeder checkins', () => {
     _.map(datasets, (dataset) => {
       describe(dataset.name, () => {
         const stats = new Statistics(dataset.config, dataset.clock);
