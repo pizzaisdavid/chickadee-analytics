@@ -19,8 +19,8 @@ export default {
   ],
   visits: [
     { timestamp: 50, feeder: 'Z', bird: 'a'},
-    { timestamp: 55, feeder: 'Z', bird: 'a'},
     { timestamp: 50, feeder: 'Z', bird: 'b'},
+    { timestamp: 55, feeder: 'Z', bird: 'a'},
     { timestamp: 55, feeder: 'Z', bird: 'b'},
   ],
   statistics: {
@@ -36,6 +36,10 @@ export default {
       checkins: {
         a: { Z: 2 },
         b: { Z: 2 },
+      },
+      associations: {
+        a: { b: 2 },
+        b: { a: 2 },
       },
     },
   },

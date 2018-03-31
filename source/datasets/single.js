@@ -26,10 +26,11 @@ export default {
     },
     birds: {
       checkins: {
-        a: {
-          Z: 1,
-        },
+        a: { Z: 1 },
       },
+      associations: {
+        a: {},
+      }
     },
   },
 };

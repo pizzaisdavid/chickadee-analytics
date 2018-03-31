@@ -5,6 +5,7 @@ export const RESOURCES = {
   TOTAL_VISITS: 'TOTAL_VISITS',
   VISITS_HEATMAP: 'VISITS_HEATMAP',
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
+  ASSOCIATIONS: 'ASSOCIATIONS',
 };
 
 export const DURATIONS = {
@@ -88,5 +89,10 @@ export class Statistics {
     });
 
     return relation;
+  }
+
+  getAssociationsForBird(id) {
+    const associations = {};
+    return associations;
   }
 }

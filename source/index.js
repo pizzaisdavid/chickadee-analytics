@@ -29,6 +29,9 @@ const statistics = new Statistics({
     duration: DURATIONS.HOUR,
     grouping: DURATIONS.MINUTE,
   },
+  [RESOURCES.ASSOCIATIONS]: {
+    grouping: 5000,
+  },
 }, clock);
 const api = new Api();
 
