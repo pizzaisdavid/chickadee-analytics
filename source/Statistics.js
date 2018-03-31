@@ -100,7 +100,8 @@ export class Statistics {
     });
 
     const movements = {};
-    _.each(this.visits, (visit) => {
+    const selectedVisits = _.filter(this.visits, (v) => v.bird === id);
+    _.each(selectedVisits, (visit) => {
       const bird = visit.bird;
       if (locations[bird] === undefined) {
         locations[bird] = visit.feeder;
