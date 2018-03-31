@@ -22,5 +22,8 @@ export default {
         30: 0,
       },
     },
+    birds: {
+      checkins: {},
+    },
   },
 };
