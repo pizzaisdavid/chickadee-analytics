@@ -92,7 +92,19 @@ export class Statistics {
   }
 
   getAssociationsForBird(id) {
+    const grouping = this.config[RESOURCES.ASSOCIATIONS].grouping;
     const associations = {};
+    _.each(this.visits, (visit, index) => {
+      if (visit.bird === id) {
+        const filteredVisits = this.findGoodVisits(visit.timestamp, grouping, index, id);
+        console.log(filteredVisits);
+      }
+    });
     return associations;
+  }
+
+  findGoodVisits(timestamp, limit, index, id) {
+    const visits = [];
+    return visits;
   }
 }
