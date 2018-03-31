@@ -43,6 +43,9 @@ export class Statistics {
   addVisits(visits) {
     // is there a better way?
     this.visits = this.visits.concat(visits);
+    this.visits.sort((a, b) => {
+      return a.timestamp - b.timestamp;
+    });
   }
 
   getTotalVisits() {
