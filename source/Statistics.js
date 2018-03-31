@@ -91,16 +91,15 @@ export class Statistics {
   }
 
   getBirdsFeederVisits(id) {
-    // TODO check if it is a valid bird
 
     const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.rfid === id;
+      return visit.bird === id;
     });
 
     // use count by?
     const relation = {};
     _.each(selectedVisits, (visit) => {
-      const id = visit.feederID;
+      const id = visit.feeder;
       if (relation[id] === undefined) {
         relation[id] = 0;
       }

@@ -2,7 +2,7 @@
 import { RESOURCES } from '../Statistics';
 
 export default {
-  name: 'one',
+  name: 'single',
   clock: { timestamp: 60 },
   config: {
     [RESOURCES.RECENT_VISITS_SUMMARY]: {
@@ -13,7 +13,7 @@ export default {
   birds: [{ id: 'a' }],
   feeders: [{ id: 'Z', longitude: 0, latitude: 0 }],
   visits: [
-    { timestamp: 55, fedder: 'Z', bird: 'a'},
+    { timestamp: 55, feeder: 'Z', bird: 'a'},
   ],
   statistics: {
     visits: {
@@ -22,6 +22,13 @@ export default {
         50: 1,
         40: 0,
         30: 0,
+      },
+    },
+    birds: {
+      checkins: {
+        a: {
+          Z: 1,
+        },
       },
     },
   },

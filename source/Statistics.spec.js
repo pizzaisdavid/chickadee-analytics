@@ -26,4 +26,21 @@ describe('Statistics' , () => {
       });
     });
   });
+
+  describe('SINGLE LIFETIME: get feeder checkins', () => {
+    _.map(datasets, (dataset) => {
+      describe(dataset.name, () => {
+        const stats = new Statistics(dataset.config, dataset.clock);
+        stats.addBirds(dataset.birds);
+        stats.addFeeders(dataset.feeders);
+        stats.addVisits(dataset.visits);
+        _.map(dataset.birds, (bird) => {
+          const id = bird.id;
+          it(id, () => {
+            assert.deepEqual(stats.getBirdsFeederVisits(id), dataset.statistics.birds.checkins[id]);
+          });
+        });
+      });
+    });
+  });
 });
