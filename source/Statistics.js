@@ -60,7 +60,6 @@ export class Statistics {
       const d = Math.floor(t / grouping) * grouping;
       group[d] = 0;
     });
-
     const recentVisits = _.filter(this.visits, (visit) => {
       return visit.timestamp >= oldestUnixTimestampAllowed;
     });
