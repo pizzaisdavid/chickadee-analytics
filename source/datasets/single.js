@@ -28,7 +28,7 @@ export default {
       checkins: {
         a: { Z: 1 },
       },
-      associations: {
+      movements: {
         a: {},
       }
     },

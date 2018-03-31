@@ -91,4 +91,9 @@ export class Statistics {
 
     return relation;
   }
+
+  getBirdMovements(id) {
+    const movements = {};
+    return movements;
+  }
 }
