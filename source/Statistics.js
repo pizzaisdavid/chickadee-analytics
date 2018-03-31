@@ -93,7 +93,40 @@ export class Statistics {
   }
 
   getBirdMovements(id) {
+
+    const locations = {};
+    _.each(this.birds, (bird) => {
+      locations[bird.id] = undefined;
+    });
+
     const movements = {};
+    _.each(this.visits, (visit) => {
+      const bird = visit.bird;
+      if (locations[bird] === undefined) {
+        locations[bird] = visit.feeder;
+      } else if (locations[bird] === visit.feeder) {
+        // do nothing
+      } else {
+        let start = locations[bird];
+        let end = visit.feeder;
+        if (movements[start] === undefined) {
+          movements[start] = {};
+        }
+        if (movements[start][end] === undefined) {
+          movements[start][end] = 0;
+        }
+        movements[start][end]++;
+
+        if (movements[end] === undefined) {
+          movements[end] = {};
+        }
+        if (movements[end][start] === undefined) {
+          movements[end][start] = 0;
+        }
+        movements[end][start]++;     
+        locations[bird] = visit.feeder;
+      }
+    });
     return movements;
   }
 }

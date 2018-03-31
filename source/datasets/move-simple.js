@@ -2,7 +2,7 @@
 import { RESOURCES } from '../Statistics';
 
 export default {
-  name: 'move-01',
+  name: 'move-simple',
   clock: { timestamp: 60 },
   config: {
     [RESOURCES.RECENT_VISITS_SUMMARY]: {
@@ -35,8 +35,8 @@ export default {
       },
       movements: {
         a: {
-          Z: { Y: 1 },
           Y: { Z: 1 },
+          Z: { Y: 1 },
         },
         b: {},
       },

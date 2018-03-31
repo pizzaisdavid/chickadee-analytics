@@ -2,11 +2,11 @@
 import empty from './empty';
 import single from './single';
 import simple from './simple';
-import move01 from './move-01';
+import moveSimple from './move-simple';
 
 export default [
   empty,
   single,
   simple,
-  move01,
+  moveSimple,
 ];
