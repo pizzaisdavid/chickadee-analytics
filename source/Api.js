@@ -93,7 +93,9 @@ export default class Api extends EventEmitter {
   prepareBirds(birds) {
     return _
       .chain(birds)
-      .map((bird) => {id: bird.rfid})
+      .map((bird) => {
+        return { id: bird.rfid };
+      })
       .keyBy('id')
       .value();
   }
