@@ -9,6 +9,9 @@ export default {
       duration: 30,
       grouping: 10,
     },
+    [RESOURCES.RECENT_CHECKINS]: {
+      duration: 30,
+    },
   },
   birds: {
     a: { id: 'a' },
@@ -24,6 +27,9 @@ export default {
     { timestamp: 55, feederId: 'Z', birdId: 'b'},
   ],
   statistics: {
+    feeders: {
+      checkins: { Z: 4 },
+    },
     visits: {
       total: 4,
       grouped: {

@@ -29,6 +29,9 @@ const statistics = new Statistics({
     duration: DURATIONS.HOUR,
     grouping: DURATIONS.MINUTE,
   },
+  [RESOURCES.RECENT_CHECKINS]: {
+    duration: DURATIONS.HOUR,
+  },
 }, clock);
 const api = new Api();
 
@@ -62,8 +65,8 @@ app.get('/api/birds/:id/feeders', (req, res) => {
   res.json(statistics.getBirdsFeederVisits(req.params.id));
 });
 
-app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.getBirdMovements(req.params.id));
+app.get('/api/feeders/checkins', (req, res) => {
+  res.json(statistics.getFeederCheckins(DURATIONS.HOUR));
 });
 
 app.listen(port, () => {

@@ -60,4 +60,16 @@ describe('Statistics' , () => {
       });
     });
   });
+
+  describe('POPULATION RECENT: feeder checkins', () => {
+    _.map(datasets, (dataset) => {
+      it(dataset.name, () => {
+        const stats = new Statistics(dataset.config, dataset.clock);
+        stats.addBirds(dataset.birds);
+        stats.addFeeders(dataset.feeders);
+        stats.addVisits(dataset.visits);
+        assert.deepEqual(stats.getFeederCheckins(), dataset.statistics.feeders.checkins);
+      });
+    });
+  });
 });

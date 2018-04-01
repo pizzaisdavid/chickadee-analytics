@@ -5,6 +5,7 @@ export const RESOURCES = {
   TOTAL_VISITS: 'TOTAL_VISITS',
   VISITS_HEATMAP: 'VISITS_HEATMAP',
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
+  RECENT_CHECKINS: 'RECENT_CHECKINS',
 };
 
 export const DURATIONS = {
@@ -137,5 +138,26 @@ export class Statistics {
       }
     });
     return movements;
+  }
+
+  getFeederCheckins() {
+    const now = this.clock.timestamp;
+    const duration = this.config[RESOURCES.RECENT_CHECKINS].duration;
+    const oldestUnixTimestampAllowed = now - duration + 1;
+
+    const selectedVisits = _.filter(this.visits, (visit) => {
+      return visit.timestamp  >= oldestUnixTimestampAllowed;
+    });
+
+    const checkins = {};
+    _.each(this.feeders, (value, id) => {
+      checkins[id] = 0;
+    });
+
+    _.each(selectedVisits, (visit) => {
+      checkins[visit.feederId]++;
+    });
+
+    return checkins;
   }
 }

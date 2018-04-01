@@ -8,7 +8,10 @@ export default {
     [RESOURCES.RECENT_VISITS_SUMMARY]: {
       duration: 30,
       grouping: 10,
-    }
+    },
+    [RESOURCES.RECENT_CHECKINS]: {
+      duration: 30,
+    },
   },
   birds: {},
   feeders: {},
@@ -25,6 +28,9 @@ export default {
     birds: {
       checkins: {},
       movements: {},
+    },
+    feeders: {
+      checkins: {},
     },
   },
 };
