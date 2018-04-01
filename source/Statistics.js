@@ -15,8 +15,8 @@ export const DURATIONS = {
 export class Statistics {
 
   constructor(config, clock) {
-    this.feeders = [];
-    this.birds = [];
+    this.birds = {};
+    this.feeders = {};
     this.visits = [];
     this.config = config;
     this.clock = clock;
@@ -33,11 +33,11 @@ export class Statistics {
   }
 
   addBirds(birds) {
-    this.birds.push(...birds);
+    this.birds = _.merge(this.birds, birds);
   }
 
   addFeeders(feeders) {
-    this.feeders.push(...feeders);
+    this.feeders = _.merge(this.feeders, feeders);
   }
 
   addVisits(visits) {
@@ -58,16 +58,11 @@ export class Statistics {
     const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
-    const times = _.range(oldestUnixTimestampAllowed, now);
-
-    const group = _.reduce(times, (object, t) => {
-      const d = Math.floor(t / grouping) * grouping;
-      object[d] = 0;
-      return object;
-    }, {});
+    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, grouping);
     const recentVisits = _.filter(this.visits, (visit) => {
       return visit.timestamp >= oldestUnixTimestampAllowed;
     });
+
 
     _.each(recentVisits, (visit) => {
       const timestamp = visit.timestamp;
@@ -77,15 +72,25 @@ export class Statistics {
     return group;
   }
 
+  generateTimeSlots(start, stop, step) {
+    const timestamps = _.range(start, stop);
+    const slots = {};
+    _.each(timestamps, (t) => {
+      const x = Math.floor(t / step) * step;
+      slots[x] = 0;
+    });
+    return slots;
+  }
+
   getBirdsFeederVisits(id) {
     const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.bird === id;
+      return visit.birdId === id;
     });
 
     // use count by?
     const relation = {};
     _.each(selectedVisits, (visit) => {
-      const id = visit.feeder;
+      const id = visit.feederId;
       if (relation[id] === undefined) {
         relation[id] = 0;
       }
@@ -103,16 +108,16 @@ export class Statistics {
     });
 
     const movements = {};
-    const selectedVisits = _.filter(this.visits, (v) => v.bird === id);
+    const selectedVisits = _.filter(this.visits, (v) => v.birdId === id);
     _.each(selectedVisits, (visit) => {
-      const bird = visit.bird;
+      const bird = visit.birdId;
       if (locations[bird] === undefined) {
-        locations[bird] = visit.feeder;
-      } else if (locations[bird] === visit.feeder) {
+        locations[bird] = visit.feederId;
+      } else if (locations[bird] === visit.feederId) {
         // do nothing
       } else {
         let start = locations[bird];
-        let end = visit.feeder;
+        let end = visit.feederId;
         if (movements[start] === undefined) {
           movements[start] = {};
         }
@@ -128,7 +133,7 @@ export class Statistics {
           movements[end][start] = 0;
         }
         movements[end][start]++;     
-        locations[bird] = visit.feeder;
+        locations[bird] = visit.feederId;
       }
     });
     return movements;

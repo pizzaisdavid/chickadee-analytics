@@ -10,18 +10,18 @@ export default {
       grouping: 10,
     },
   },
-  birds: [
-    { id: 'a' },
-  ],
-  feeders: [
-    { id: 'X', longitude: 0, latitude: 0 },
-    { id: 'Y', longitude: 0, latitude: 0 },
-    { id: 'Z', longitude: 0, latitude: 0 },
-  ],
+  birds: {
+    a: { id: 'a' },
+  },
+  feeders: {
+    X: { id: 'X', longitude: 0, latitude: 0 },
+    Y: { id: 'Y', longitude: 0, latitude: 0 },
+    Z: { id: 'Z', longitude: 0, latitude: 0 },
+  },
   visits: [
-    { timestamp: 51, feeder: 'Y', bird: 'a'},
-    { timestamp: 52, feeder: 'Z', bird: 'a'},
-    { timestamp: 50, feeder: 'X', bird: 'a'},
+    { timestamp: 51, feederId: 'Y', birdId: 'a'},
+    { timestamp: 52, feederId: 'Z', birdId: 'a'},
+    { timestamp: 50, feederId: 'X', birdId: 'a'},
   ],
   statistics: {
     visits: {

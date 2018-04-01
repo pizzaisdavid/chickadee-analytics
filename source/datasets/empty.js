@@ -10,8 +10,8 @@ export default {
       grouping: 10,
     }
   },
-  birds: [],
-  feeders: [],
+  birds: {},
+  feeders: {},
   visits: [],
   statistics: {
     visits: {
