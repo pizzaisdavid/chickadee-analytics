@@ -18,10 +18,10 @@ export default {
     { id: 'Z', longitude: 0, latitude: 0 },
   ],
   visits: [
-    { timestamp: 50, feeder: 'Z', bird: 'a'},
-    { timestamp: 50, feeder: 'Z', bird: 'b'},
-    { timestamp: 55, feeder: 'Z', bird: 'a'},
-    { timestamp: 55, feeder: 'Z', bird: 'b'},
+    { timestamp: 50, feederId: 'Z', birdId: 'a'},
+    { timestamp: 50, feederId: 'Z', birdId: 'b'},
+    { timestamp: 55, feederId: 'Z', birdId: 'a'},
+    { timestamp: 55, feederId: 'Z', birdId: 'b'},
   ],
   statistics: {
     visits: {

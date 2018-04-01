@@ -13,7 +13,7 @@ export default {
   birds: [{ id: 'a' }],
   feeders: [{ id: 'Z', longitude: 0, latitude: 0 }],
   visits: [
-    { timestamp: 55, feeder: 'Z', bird: 'a'},
+    { timestamp: 55, feederId: 'Z', birdId: 'a'},
   ],
   statistics: {
     visits: {

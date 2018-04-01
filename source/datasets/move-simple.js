@@ -18,8 +18,8 @@ export default {
     { id: 'Y', longitude: 0, latitude: 0 },
   ],
   visits: [
-    { timestamp: 50, feeder: 'Z', bird: 'a'},
-    { timestamp: 55, feeder: 'Y', bird: 'a'},
+    { timestamp: 50, feederId: 'Z', birdId: 'a'},
+    { timestamp: 55, feederId: 'Y', birdId: 'a'},
   ],
   statistics: {
     visits: {

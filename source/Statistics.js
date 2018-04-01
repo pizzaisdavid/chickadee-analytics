@@ -79,13 +79,13 @@ export class Statistics {
 
   getBirdsFeederVisits(id) {
     const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.bird === id;
+      return visit.birdId=== id;
     });
 
     // use count by?
     const relation = {};
     _.each(selectedVisits, (visit) => {
-      const id = visit.feeder;
+      const id = visit.feederId;
       if (relation[id] === undefined) {
         relation[id] = 0;
       }
@@ -103,16 +103,16 @@ export class Statistics {
     });
 
     const movements = {};
-    const selectedVisits = _.filter(this.visits, (v) => v.bird === id);
+    const selectedVisits = _.filter(this.visits, (v) => v.birdId === id);
     _.each(selectedVisits, (visit) => {
-      const bird = visit.bird;
+      const bird = visit.birdId;
       if (locations[bird] === undefined) {
-        locations[bird] = visit.feeder;
-      } else if (locations[bird] === visit.feeder) {
+        locations[bird] = visit.feederId;
+      } else if (locations[bird] === visit.feederId) {
         // do nothing
       } else {
         let start = locations[bird];
-        let end = visit.feeder;
+        let end = visit.feederId;
         if (movements[start] === undefined) {
           movements[start] = {};
         }
@@ -128,7 +128,7 @@ export class Statistics {
           movements[end][start] = 0;
         }
         movements[end][start]++;     
-        locations[bird] = visit.feeder;
+        locations[bird] = visit.feederId;
       }
     });
     return movements;

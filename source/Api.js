@@ -75,8 +75,8 @@ export default class Api extends EventEmitter {
       const visits = _.map(rawVisits, (visit) => {
         return {
           timestamp: visit.visitTimestamp,
-          bird: visit.rfid,
-          feeder: visit.feederID,
+          birdId: visit.rfid,
+          feederId: visit.feederID,
         };
       });
       console.log(`FEEDERS=${feeders.length}, BIRDS=${birds.length}, VISITS=${visits.length}`);
