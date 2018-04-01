@@ -58,16 +58,11 @@ export class Statistics {
     const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
-    const times = _.range(oldestUnixTimestampAllowed, now);
-
-    const group = _.reduce(times, (object, t) => {
-      const d = Math.floor(t / grouping) * grouping;
-      object[d] = 0;
-      return object;
-    }, {});
+    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, grouping);
     const recentVisits = _.filter(this.visits, (visit) => {
       return visit.timestamp >= oldestUnixTimestampAllowed;
     });
+
 
     _.each(recentVisits, (visit) => {
       const timestamp = visit.timestamp;
@@ -77,9 +72,19 @@ export class Statistics {
     return group;
   }
 
+  generateTimeSlots(start, stop, step) {
+    const timestamps = _.range(start, stop);
+    const slots = {};
+    _.each(timestamps, (t) => {
+      const x = Math.floor(t / step) * step;
+      slots[x] = 0;
+    });
+    return slots;
+  }
+
   getBirdsFeederVisits(id) {
     const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.birdId=== id;
+      return visit.birdId === id;
     });
 
     // use count by?
