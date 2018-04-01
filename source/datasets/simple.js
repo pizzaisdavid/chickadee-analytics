@@ -10,13 +10,13 @@ export default {
       grouping: 10,
     },
   },
-  birds: [
-    { id: 'a' },
-    { id: 'b' },
-  ],
-  feeders: [
-    { id: 'Z', longitude: 0, latitude: 0 },
-  ],
+  birds: {
+    a: { id: 'a' },
+    b: { id: 'b' },    
+  },
+  feeders: {
+    Z: { id: 'Z', longitude: 0, latitude: 0 },
+  },
   visits: [
     { timestamp: 50, feederId: 'Z', birdId: 'a'},
     { timestamp: 50, feederId: 'Z', birdId: 'b'},

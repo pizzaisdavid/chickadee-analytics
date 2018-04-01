@@ -66,32 +66,56 @@ export default class Api extends EventEmitter {
       if (error) {
         console.log(error);
       }
-      const feeders = results[0];
+      const rawFeeders = results[0];
       const rawBirds = results[2];
       const rawVisits = results[4];
-      const birds = _.map(rawBirds, (bird) => {
-        return { id: bird.rfid };
-      });
-      const visits = _.map(rawVisits, (visit) => {
-        return {
-          timestamp: visit.visitTimestamp,
-          birdId: visit.rfid,
-          feederId: visit.feederID,
-        };
-      });
-      console.log(`FEEDERS=${feeders.length}, BIRDS=${birds.length}, VISITS=${visits.length}`);
-      if (feeders.length > 0) {
+      
+      const birds = this.prepareBirds(rawBirds);
+      const feeders = this.prepareFeeders(rawFeeders)
+      const visits = this.prepareVisits(rawVisits);
+
+      console.log(`FEEDERS=${_.size(feeders)}, BIRDS=${_.size(birds)}, VISITS=${_.size(visits)}`);
+      if (_.size(feeders) > 0) {
         this.emit(Api.EVENTS.NEW, Api.RESOURCES.FEEDERS, feeders);
       }
-      if (birds.length > 0) {
+      if (_.size(birds) > 0) {
         this.emit(Api.EVENTS.NEW, Api.RESOURCES.BIRDS, birds);
       }
-      if (visits.length > 0) {
+      if (_.size(visits) > 0) {
         this.emit(Api.EVENTS.NEW, Api.RESOURCES.VISITS, visits);
       }
       setTimeout(() => {
         this.listen();
       }, config.frequency);
     });
+  }
+
+  prepareBirds(birds) {
+    return _
+      .chain(birds)
+      .map((bird) => {id: bird.rfid})
+      .keyBy('id')
+      .value();
+  }
+
+  prepareFeeders(feeders) {
+    return _
+      .chain(feeders)
+      .map((feeder) => _.pick(feeder, ['id', 'latitude', 'longitude']))
+      .keyBy('id')
+      .value();
+  }
+
+  prepareVisits(visits) {
+    return _
+      .chain(visits)
+      .map((visit) => { 
+        return {
+          timestamp: visit.visitTimestamp,
+          birdId: visit.rfid,
+          feederId: visit.feederID,
+        };
+      })
+      .value();
   }
 }

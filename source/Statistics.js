@@ -15,8 +15,8 @@ export const DURATIONS = {
 export class Statistics {
 
   constructor(config, clock) {
-    this.feeders = [];
-    this.birds = [];
+    this.birds = {};
+    this.feeders = {};
     this.visits = [];
     this.config = config;
     this.clock = clock;
@@ -33,11 +33,11 @@ export class Statistics {
   }
 
   addBirds(birds) {
-    this.birds.push(...birds);
+    this.birds = _.merge(this.birds, birds);
   }
 
   addFeeders(feeders) {
-    this.feeders.push(...feeders);
+    this.feeders = _.merge(this.feeders, feeders);
   }
 
   addVisits(visits) {
