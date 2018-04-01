@@ -62,6 +62,10 @@ app.get('/api/birds/:id/feeders', (req, res) => {
   res.json(statistics.getBirdsFeederVisits(req.params.id));
 });
 
+app.get('/api/birds/:id/movements', (req, res) => {
+  res.json(statistics.getBirdMovements(req.params.id));
+});
+
 app.listen(port, () => {
   console.log(`Analytics running on ${port}`);
 });
