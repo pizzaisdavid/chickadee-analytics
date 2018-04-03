@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import Api from './Api';
 import { Clock } from './Clock';
-import { RESOURCES, Statistics } from './Statistics';
+import { RESOURCES, DURATIONS, Statistics } from './Statistics';
 
 const app = express();
 
@@ -25,12 +25,12 @@ var corsOptions = {
 const port = 18156;
 const clock = new Clock();
 const statistics = new Statistics({
-  [RESOURCES.VISITS_HEATMAP]: {
-    duration: 100000,
+  [RESOURCES.RECENT_VISITS_SUMMARY]: {
+    duration: DURATIONS.HOUR,
+    grouping: DURATIONS.MINUTE,
   },
-  [RESOURCES.RECENT_VISITS_BY_MINUTE]: {
-    duration: 60 * 60,
-    grouping: 60,
+  [RESOURCES.RECENT_CHECKINS]: {
+    duration: DURATIONS.HOUR,
   },
 }, clock);
 const api = new Api();
@@ -46,16 +46,6 @@ api.on(Api.EVENTS.NEW, (name, list) => {
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
-  res.end();
-});
-
-app.get('/api', (req, res) => {
-  res.json({
-    [RESOURCES.TOTAL_VISITS]: statistics.getTotalVisits(),
-    [RESOURCES.VISITS_HEATMAP]: statistics.getHeatmap(),
-    [RESOURCES.RECENT_VISITS_BY_MINUTE]: statistics.getRecentVisitsByMinute(),
-  });
-  res.end();
 });
 
 app.get('/api/stuff', (req, res) => {
@@ -67,12 +57,20 @@ app.get('/api/stuff', (req, res) => {
   res.end();
 });
 
-app.get('/api/visits/total', (req, res) => {
-  res.json({ 'visits' : statistics.getTotalVisits() });
+app.get('/api/visits/summary', (req, res) => {
+  res.json(statistics.getVisitsGroupedByTime());
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
   res.json(statistics.getBirdsFeederVisits(req.params.id));
+});
+
+app.get('/api/birds/:id/movements', (req, res) => {
+  res.json(statistics.getBirdMovements(req.params.id));
+});
+
+app.get('/api/feeders/checkins', (req, res) => {
+  res.json(statistics.getFeederCheckins(DURATIONS.HOUR));
 });
 
 app.listen(port, () => {

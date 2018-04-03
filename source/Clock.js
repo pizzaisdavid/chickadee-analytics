@@ -1,7 +1,7 @@
 
 export class Clock {
 
-  get time() {
+  get timestamp() {
     return Date.now() / 1000;
   }
 }
