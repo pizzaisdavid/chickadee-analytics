@@ -2,13 +2,13 @@
 import empty from './empty';
 import single from './single';
 import simple from './simple';
-import moveSimple from './move-simple';
-import moveOrder from './move-order';
+import movement from './movement';
+import movementUnordered from './movement-unordered';
 
-export default [
+export {
   empty,
   single,
   simple,
-  moveSimple,
-  moveOrder,
-];
+  movement,
+  movementUnordered,
+};
