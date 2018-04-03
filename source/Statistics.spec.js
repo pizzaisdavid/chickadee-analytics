@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import assert from 'assert';
 
-import { Statistics } from './Statistics';
+import { Statistics, RESOURCES } from './Statistics';
 import { empty, single, simple, movement, movementUnordered } from './datasets';
 
 describe('Statistics' , () => {
@@ -26,7 +26,11 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        assert.deepEqual(statistics.getVisitsGroupedByTime(), dataset.statistics.visits.grouped);
+        const duration = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
+        const grouping = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
+        const actual = statistics.getVisitsGroupedByTime(duration, grouping);
+        const expected = dataset.statistics.visits.grouped;
+        assert.deepEqual(actual, expected);
       });
     });
   });

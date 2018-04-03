@@ -53,10 +53,8 @@ export class Statistics {
     return this.visits.length;
   }
 
-  getVisitsGroupedByTime() {
+  getVisitsGroupedByTime(duration, grouping) {
     const now = this.clock.timestamp;
-    const duration = this.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
-    const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
     const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, grouping);

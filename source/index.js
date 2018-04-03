@@ -25,10 +25,6 @@ var corsOptions = {
 const port = 18156;
 const clock = new Clock();
 const statistics = new Statistics({
-  [RESOURCES.RECENT_VISITS_SUMMARY]: {
-    duration: DURATIONS.HOUR,
-    grouping: DURATIONS.MINUTE,
-  },
   [RESOURCES.RECENT_CHECKINS]: {
     duration: DURATIONS.HOUR,
   },
@@ -58,7 +54,7 @@ app.get('/api/stuff', (req, res) => {
 });
 
 app.get('/api/visits/summary', (req, res) => {
-  res.json(statistics.getVisitsGroupedByTime());
+  res.json(statistics.getVisitsGroupedByTime(DURATIONS.HOUR, DURATIONS.MINUTE));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
