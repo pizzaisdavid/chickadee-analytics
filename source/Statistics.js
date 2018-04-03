@@ -53,11 +53,11 @@ export class Statistics {
     return this.visits.length;
   }
 
-  getVisitsGroupedByTime(duration, grouping) {
+  getVisitsGroupedByTime(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
-    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, grouping);
+    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
     const recentVisits = _.filter(this.visits, (visit) => {
       return visit.timestamp >= oldestUnixTimestampAllowed;
     });
@@ -65,7 +65,7 @@ export class Statistics {
 
     _.each(recentVisits, (visit) => {
       const timestamp = visit.timestamp;
-      const d = Math.floor(timestamp / grouping) * grouping;
+      const d = Math.floor(timestamp / step) * step;
       group[d]++;
     });
     return group;
