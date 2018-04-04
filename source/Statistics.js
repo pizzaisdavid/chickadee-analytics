@@ -26,11 +26,10 @@ export const DURATIONS = {
 
 export class Statistics {
 
-  constructor(config, clock) {
+  constructor(clock) {
     this.birds = {};
     this.feeders = {};
     this.visits = [];
-    this.config = config;
     this.clock = clock;
   }
 

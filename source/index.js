@@ -24,7 +24,7 @@ var corsOptions = {
 
 const port = 18156;
 const clock = new Clock();
-const statistics = new Statistics({}, clock);
+const statistics = new Statistics(clock);
 const api = new Api();
 
 api.on(Api.EVENTS.INITIALIZE, () => {
