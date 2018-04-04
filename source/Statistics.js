@@ -53,7 +53,7 @@ export class Statistics {
     return this.visits.length;
   }
 
-  getVisitsGroupedByTime(duration, step) {
+  getVisitsByTime(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
@@ -85,18 +85,7 @@ export class Statistics {
     const selectedVisits = _.filter(this.visits, (visit) => {
       return visit.birdId === id;
     });
-
-    // use count by?
-    const relation = {};
-    _.each(selectedVisits, (visit) => {
-      const id = visit.feederId;
-      if (relation[id] === undefined) {
-        relation[id] = 0;
-      }
-      relation[id]++;
-    });
-
-    return relation;
+    return _.countBy(selectedVisits, 'feederId');
   }
 
   getBirdMovements(id) {

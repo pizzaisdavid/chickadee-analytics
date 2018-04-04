@@ -54,7 +54,7 @@ app.get('/api/stuff', (req, res) => {
 });
 
 app.get('/api/visits/summary', (req, res) => {
-  res.json(statistics.getVisitsGroupedByTime(DURATIONS.HOUR, DURATIONS.MINUTE));
+  res.json(statistics.getVisitsByTime(DURATIONS.HOUR, DURATIONS.MINUTE));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {

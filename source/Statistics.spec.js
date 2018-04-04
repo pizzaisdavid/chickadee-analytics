@@ -28,7 +28,7 @@ describe('Statistics' , () => {
       testDatasetForPopulation(dataset, (statistics) => {
         const duration = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
         const grouping = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
-        const actual = statistics.getVisitsGroupedByTime(duration, grouping);
+        const actual = statistics.getVisitsByTime(duration, grouping);
         const expected = dataset.statistics.visits.grouped;
         assert.deepEqual(actual, expected);
       });
