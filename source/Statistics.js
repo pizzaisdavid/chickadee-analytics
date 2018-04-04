@@ -5,7 +5,7 @@ function filterByBirdId(list, id) {
   return _.filter(list, (item) => item.birdId === id);
 }
 
-function groupByFeederId(visits) {
+function groupByFeeder(visits) {
   return _.countBy(visits, 'feederId');
 }
 
@@ -23,7 +23,7 @@ function filterOldVisits(visits, limitTimestamp) {
 
 _.mixin({
   'filterByBirdId': filterByBirdId,
-  'groupByFeederId': groupByFeederId,
+  'groupByFeeder': groupByFeeder,
   'zero': zero,
   'filterOldVisits': filterOldVisits,
 });
@@ -109,17 +109,10 @@ export class Statistics {
     const timestamps = _.range(start, stop);
     const slots = {};
     _.each(timestamps, (t) => {
-      const x = Math.floor(t / step) * step;
+      const x = this.computeGOUP(t, step);
       slots[x] = 0;
     });
     return slots;
-  }
-
-  computeVisitsByFeederForIndividual(id) {
-    return _(this.visits)
-      .filterByBirdId(id)
-      .groupByFeederId()
-      .value();
   }
 
   computeMovementsForIndividual(id) {
@@ -153,11 +146,19 @@ export class Statistics {
     return movements;
   }
 
+  computeVisitsByFeederForIndividual(id) {
+    return _(this.visits)
+      .filterByBirdId(id)
+      .groupByFeeder()
+      .value();
+  }
+
   computeVisitsByFeederForPopulation(duration) {
+    // todo: remove the zeroing out
     const x = _.zero(this.feeders);
     const borks = _(this.visits)
       .filterOldVisits(this.computeOldestAllowedTimestamp(duration))
-      .groupByFeederId()
+      .groupByFeeder()
       .value();
     return _.merge(x, borks);
   }
