@@ -79,6 +79,8 @@ describe('Statistics' , () => {
 describe('POPULATION LIFETIME: associations', () => {
   _.map([
     empty,
+    single,
+    simple,
   ], (dataset) => {
     testDatasetForPopulation(dataset, (statistics) => {
       const timespan = dataset.config[RESOURCES.ASSOCIATIONS].timespan;
