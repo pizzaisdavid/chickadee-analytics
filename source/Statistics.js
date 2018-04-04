@@ -88,7 +88,7 @@ export class Statistics {
     const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
     const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
-    const ye = _.countBy(selectedVisits, (visit) => this.computeGOUP(visit, step));
+    const ye = _.countBy(selectedVisits, (visit) => this.computeGOUP(visit.timestamp, step));
     return _.merge(group, ye);
   }
 
@@ -97,8 +97,8 @@ export class Statistics {
     return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
   }
 
-  computeGOUP(visit, step) {
-    return Math.floor(visit.timestamp / step) * step;
+  computeGOUP(timestamp, step) {
+    return Math.floor(timestamp / step) * step;
   }
 
   filterVisitsByTimestamp(visits, limitTimestamp) {
