@@ -1,11 +1,18 @@
 
 import _ from 'lodash';
 
-function filterVisitsById(visits, id) {
-  return _.filter(visits, (visit) => visit.birdId === id);
+function filterByBirdId(list, id) {
+  return _.filter(list, (item) => item.birdId === id);
 }
 
-_.mixin({ 'filterVisitsById': filterVisitsById });
+function groupByFeederId(visits) {
+  return _.countBy(visits, 'feederId');
+}
+
+_.mixin({
+  'filterByBirdId': filterByBirdId,
+  'groupByFeederId': groupByFeederId
+});
 
 export const RESOURCES = {
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
@@ -92,12 +99,12 @@ export class Statistics {
 
   computeVisitsByFeederForIndividual(id) {
     return _(this.visits)
-      .filterVisitsById(id)
-      .countBy('feederId')
+      .filterByBirdId(id)
+      .groupByFeederId()
       .value();
   }
 
-  comptueMovementsForIndividual(id) {
+  computeMovementsForIndividual(id) {
     const locations = {};
     _.each(this.birds, (bird, id) => {
       locations[id] = undefined;

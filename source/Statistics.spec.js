@@ -54,7 +54,7 @@ describe('Statistics' , () => {
       movementUnordered,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.comptueMovementsForIndividual(id), dataset.statistics.birds.movements[id]);
+        assert.deepEqual(statistics.computeMovementsForIndividual(id), dataset.statistics.birds.movements[id]);
       });
     });
   });
