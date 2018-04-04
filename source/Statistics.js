@@ -123,17 +123,14 @@ export class Statistics {
   }
 
   computeMovementsForIndividual(id) {
-    const locations = {};
-    _.each(this.birds, (bird, id) => {
-      locations[id] = undefined;
-    });
+    const locations = _.zero(this.birds);
 
     const movements = {};
     const selectedVisits = this.filterVisitsById(this.visits, id);
 
     _.each(selectedVisits, (visit) => {
       const bird = visit.birdId;
-      if (locations[bird] === undefined) {
+      if (!locations[bird]) {
         locations[bird] = visit.feederId;
       } else if (locations[bird] === visit.feederId) {
         // do nothing
