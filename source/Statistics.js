@@ -1,9 +1,34 @@
 
-import * as _ from 'lodash';
+import _ from 'lodash';
+
+function filterByBirdId(list, id) {
+  return _.filter(list, (item) => item.birdId === id);
+}
+
+function groupByFeederId(visits) {
+  return _.countBy(visits, 'feederId');
+}
+
+function zero(source) {
+  const destination = {};
+  _.each(source, (value, key) => {
+    destination[key] = 0;
+  });
+  return destination;
+}
+
+function filterOldVisits(visits, limitTimestamp) {
+  return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
+}
+
+_.mixin({
+  'filterByBirdId': filterByBirdId,
+  'groupByFeederId': groupByFeederId,
+  'zero': zero,
+  'filterOldVisits': filterOldVisits,
+});
 
 export const RESOURCES = {
-  TOTAL_VISITS: 'TOTAL_VISITS',
-  VISITS_HEATMAP: 'VISITS_HEATMAP',
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
   RECENT_CHECKINS: 'RECENT_CHECKINS',
 };
@@ -15,11 +40,10 @@ export const DURATIONS = {
 
 export class Statistics {
 
-  constructor(config, clock) {
+  constructor(clock) {
     this.birds = {};
     this.feeders = {};
     this.visits = [];
-    this.config = config;
     this.clock = clock;
   }
 
@@ -53,24 +77,32 @@ export class Statistics {
     return this.visits.length;
   }
 
-  getVisitsGroupedByTime() {
+  filterVisitsById(visits, id) {
+    return _.filter(visits, (visit) => visit.birdId === id);
+  }
+
+  computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
-    const duration = this.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
-    const grouping = this.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
-    const oldestUnixTimestampAllowed = now - duration + 1;
+    const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
 
-    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, grouping);
-    const recentVisits = _.filter(this.visits, (visit) => {
-      return visit.timestamp >= oldestUnixTimestampAllowed;
-    });
+    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
+    const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
+    const ye = _.countBy(selectedVisits, (visit) => this.computeGOUP(visit, step));
+    return _.merge(group, ye);
+  }
 
-    _.each(recentVisits, (visit) => {
-      const timestamp = visit.timestamp;
-      const d = Math.floor(timestamp / grouping) * grouping;
-      group[d]++;
-    });
-    return group;
+  computeOldestAllowedTimestamp(duration) {
+    const EXCLUSIVE_INCLUDE = 1;
+    return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
+  }
+
+  computeGOUP(visit, step) {
+    return Math.floor(visit.timestamp / step) * step;
+  }
+
+  filterVisitsByTimestamp(visits, limitTimestamp) {
+    return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
   }
 
   generateTimeSlots(start, stop, step) {
@@ -83,81 +115,50 @@ export class Statistics {
     return slots;
   }
 
-  getBirdsFeederVisits(id) {
-    const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.birdId === id;
-    });
-
-    // use count by?
-    const relation = {};
-    _.each(selectedVisits, (visit) => {
-      const id = visit.feederId;
-      if (relation[id] === undefined) {
-        relation[id] = 0;
-      }
-      relation[id]++;
-    });
-
-    return relation;
+  computeVisitsByFeederForIndividual(id) {
+    return _(this.visits)
+      .filterByBirdId(id)
+      .groupByFeederId()
+      .value();
   }
 
-  getBirdMovements(id) {
-
-    const locations = {};
-    _.each(this.birds, (bird) => {
-      locations[bird.id] = undefined;
-    });
+  computeMovementsForIndividual(id) {
+    const locations = _.zero(this.birds);
 
     const movements = {};
-    const selectedVisits = _.filter(this.visits, (v) => v.birdId === id);
+    const selectedVisits = this.filterVisitsById(this.visits, id);
+
     _.each(selectedVisits, (visit) => {
       const bird = visit.birdId;
-      if (locations[bird] === undefined) {
+      if (!locations[bird]) {
         locations[bird] = visit.feederId;
       } else if (locations[bird] === visit.feederId) {
         // do nothing
       } else {
         let start = locations[bird];
         let end = visit.feederId;
-        if (movements[start] === undefined) {
-          movements[start] = {};
-        }
-        if (movements[start][end] === undefined) {
-          movements[start][end] = 0;
-        }
-        movements[start][end]++;
+        let path = [start, end];
+        let count = _.get(movements, path, 0);
+        count++;
+        _.set(movements, path, count);
 
-        if (movements[end] === undefined) {
-          movements[end] = {};
-        }
-        if (movements[end][start] === undefined) {
-          movements[end][start] = 0;
-        }
-        movements[end][start]++;     
+        path = [end, start];
+        count = _.get(movements, path, 0);
+        count++;
+        _.set(movements, path, count);
+
         locations[bird] = visit.feederId;
       }
     });
     return movements;
   }
 
-  getFeederCheckins() {
-    const now = this.clock.timestamp;
-    const duration = this.config[RESOURCES.RECENT_CHECKINS].duration;
-    const oldestUnixTimestampAllowed = now - duration + 1;
-
-    const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.timestamp  >= oldestUnixTimestampAllowed;
-    });
-
-    const checkins = {};
-    _.each(this.feeders, (value, id) => {
-      checkins[id] = 0;
-    });
-
-    _.each(selectedVisits, (visit) => {
-      checkins[visit.feederId]++;
-    });
-
-    return checkins;
+  computeVisitsByFeederForPopulation(duration) {
+    const x = _.zero(this.feeders);
+    const borks = _(this.visits)
+      .filterOldVisits(this.computeOldestAllowedTimestamp(duration))
+      .groupByFeederId()
+      .value();
+    return _.merge(x, borks);
   }
 }

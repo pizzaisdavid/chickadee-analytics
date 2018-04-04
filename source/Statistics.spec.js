@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import assert from 'assert';
 
-import { Statistics } from './Statistics';
+import { Statistics, RESOURCES } from './Statistics';
 import { empty, single, simple, movement, movementUnordered } from './datasets';
 
 describe('Statistics' , () => {
@@ -26,7 +26,11 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        assert.deepEqual(statistics.getVisitsGroupedByTime(), dataset.statistics.visits.grouped);
+        const duration = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
+        const grouping = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
+        const actual = statistics.computeVisitsForPopulation(duration, grouping);
+        const expected = dataset.statistics.visits.grouped;
+        assert.deepEqual(actual, expected);
       });
     });
   });
@@ -38,7 +42,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.getBirdsFeederVisits(id), dataset.statistics.birds.checkins[id]);
+        assert.deepEqual(statistics.computeVisitsByFeederForIndividual(id), dataset.statistics.birds.checkins[id]);
       });
     });
   });
@@ -46,13 +50,11 @@ describe('Statistics' , () => {
   describe('INDIVIDUAL LIFETIME: movement', () => {
     _.map([
       empty,
-      single,
-      simple,
       movement,
       movementUnordered,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.getBirdMovements(id), dataset.statistics.birds.movements[id]);
+        assert.deepEqual(statistics.computeMovementsForIndividual(id), dataset.statistics.birds.movements[id]);
       });
     });
   });
@@ -64,7 +66,11 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        assert.deepEqual(statistics.getFeederCheckins(), dataset.statistics.feeders.checkins);
+        const duration = dataset.config[RESOURCES.RECENT_CHECKINS].duration;
+        assert.deepEqual(
+          statistics.computeVisitsByFeederForPopulation(duration),
+          dataset.statistics.feeders.checkins
+        );
       });
     });
   });
@@ -72,7 +78,7 @@ describe('Statistics' , () => {
 
 function testDatasetForPopulation(dataset, callback) {
   it(dataset.name, () => {
-    const statistics = new Statistics(dataset.config, dataset.clock);
+    const statistics = new Statistics(dataset.clock);
     statistics.addBirds(dataset.birds);
     statistics.addFeeders(dataset.feeders);
     statistics.addVisits(dataset.visits);
@@ -82,7 +88,7 @@ function testDatasetForPopulation(dataset, callback) {
 
 function testDatasetForIndividuals(dataset, callback) {
   describe(dataset.name, () => {
-    const statistics = new Statistics(dataset.config, dataset.clock);
+    const statistics = new Statistics(dataset.clock);
     statistics.addBirds(dataset.birds);
     statistics.addFeeders(dataset.feeders);
     statistics.addVisits(dataset.visits);

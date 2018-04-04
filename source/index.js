@@ -24,15 +24,7 @@ var corsOptions = {
 
 const port = 18156;
 const clock = new Clock();
-const statistics = new Statistics({
-  [RESOURCES.RECENT_VISITS_SUMMARY]: {
-    duration: DURATIONS.HOUR,
-    grouping: DURATIONS.MINUTE,
-  },
-  [RESOURCES.RECENT_CHECKINS]: {
-    duration: DURATIONS.HOUR,
-  },
-}, clock);
+const statistics = new Statistics(clock);
 const api = new Api();
 
 api.on(Api.EVENTS.INITIALIZE, () => {
@@ -48,29 +40,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-app.get('/api/stuff', (req, res) => {
-  res.json({
-    [Api.RESOURCES.FEEDERS]: statistics.feeders,
-    [Api.RESOURCES.BIRDS]: statistics.birds,
-    [Api.RESOURCES.VISITS]: statistics.visits.length,
-  });
-  res.end();
-});
-
 app.get('/api/visits/summary', (req, res) => {
-  res.json(statistics.getVisitsGroupedByTime());
-});
-
-app.get('/api/birds/:id/feeders', (req, res) => {
-  res.json(statistics.getBirdsFeederVisits(req.params.id));
-});
-
-app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.getBirdMovements(req.params.id));
+  res.json(statistics.computeVisitsForPopulation(DURATIONS.HOUR, DURATIONS.MINUTE));
 });
 
 app.get('/api/feeders/checkins', (req, res) => {
-  res.json(statistics.getFeederCheckins(DURATIONS.HOUR));
+  res.json(statistics.computeVisitsByFeederForPopulation(DURATIONS.HOUR));
+});
+
+app.get('/api/birds/:id/feeders', (req, res) => {
+  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id));
+});
+
+app.get('/api/birds/:id/movements', (req, res) => {
+  res.json(statistics.computeMovementsForIndividual(req.params.id));
 });
 
 app.listen(port, () => {
