@@ -134,11 +134,9 @@ export class Statistics {
     _.each(this.feeders, (value, id) => {
       checkins[id] = 0;
     });
+    
+    const x = _.countBy(selectedVisits, 'feederId');
 
-    _.each(selectedVisits, (visit) => {
-      checkins[visit.feederId]++;
-    });
-
-    return checkins;
+    return _.merge(checkins, x);
   }
 }
