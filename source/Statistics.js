@@ -123,7 +123,7 @@ export class Statistics {
     return movements;
   }
 
-  getFeederCheckins() {
+  computeVisitsByFeederForPopulation() {
     const now = this.clock.timestamp;
     const duration = this.config[RESOURCES.RECENT_CHECKINS].duration;
     const oldestUnixTimestampAllowed = now - duration + 1;
