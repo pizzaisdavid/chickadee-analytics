@@ -12,6 +12,9 @@ export default {
     [RESOURCES.RECENT_CHECKINS]: {
       duration: 30,
     },
+    [RESOURCES.ASSOCIATIONS]: {
+      timespan: 10
+    }
   },
   birds: { 
     a: { id: 'a' },
@@ -39,8 +42,9 @@ export default {
         a: { Z: 1 },
       },
       movements: {
-        a: { },
-      }
+        a: {},
+      },
+      associations: {},
     },
   },
 };

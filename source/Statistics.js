@@ -31,6 +31,7 @@ _.mixin({
 export const RESOURCES = {
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
   RECENT_CHECKINS: 'RECENT_CHECKINS',
+  ASSOCIATIONS: 'ASSOCIATIONS',
 };
 
 export const DURATIONS = {
@@ -161,5 +162,62 @@ export class Statistics {
       .groupByFeeder()
       .value();
     return _.merge(x, borks);
+  }
+
+  computeAssociationsForPopulation(timespan) {
+    // TODO: first filter by feeder.
+    const lookforward = timespan / 2;
+    const associations = {};
+    _(this.visits)
+      .slice(0, 2000)
+      .each((visit, index) => {
+      const furthestAwayTimestamp = visit.timestamp + lookforward;
+      const associatedBirds = this.findAssociatedBirds(furthestAwayTimestamp, visit.birdId, visit.feederId, index);
+      const smallAssociations = _.countBy(associatedBirds, 'birdId');
+      const asso = _.get(associations, [visit.birdId], {});
+      const ye = _.assign(asso, smallAssociations);
+      associations[visit.birdId] = ye;
+    });
+    return this.makeSymetric(associations);
+  }
+
+  makeSymetric(matrix) {
+    const newm = {};
+    _.each(matrix, (row, key1) => {
+      _.each(row, (value, key2) => {
+        let v1 = 0;
+        let v2 = 0;
+        try {
+          v1 = matrix[key1][key2];
+        } catch (e) {
+        }
+        try {
+          v2 = matrix[key2][key1];
+        } catch (e) {
+        }
+        const total = v1 + v2;
+        _.set(newm, [key1, key2], total);
+        _.set(newm, [key2, key1], total);
+      })
+    });
+    return newm;
+  }
+
+  findAssociatedBirds(limitTimestamp, id, feeder, index) {
+    const visits = [];
+    _(this.visits)
+      .slice(index + 1)
+      .each((visit) => {
+        if (visit.timestamp > limitTimestamp) {
+          return false;
+        }
+        if (visit.birdId === id) {
+          return false;
+        }
+        if (visit.feederId === feeder) {
+          visits.push(visit);
+        }
+      });
+  return visits;
   }
 }
