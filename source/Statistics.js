@@ -65,18 +65,23 @@ export class Statistics {
   }
 
   filterVisitsById(visits, id) {
-    return _.filter(this.visits, (visit) => visit.birdId === id);
+    return _.filter(visits, (visit) => visit.birdId === id);
   }
 
   computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
-    const oldestUnixTimestampAllowed = now - duration + 1;
+    const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
 
     const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
     const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
     const ye = _.countBy(selectedVisits, (visit) => this.computeGOUP(visit, step));
     return _.merge(group, ye);
+  }
+
+  computeOldestAllowedTimestamp(duration) {
+    const EXCLUSIVE_INCLUDE = 1;
+    return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
   }
 
   computeGOUP(visit, step) {
