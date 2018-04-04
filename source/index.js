@@ -54,7 +54,7 @@ app.get('/api/birds/:id/feeders', (req, res) => {
 });
 
 app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.getBirdMovements(req.params.id));
+  res.json(statistics.computeIndividualBirdMovements(req.params.id));
 });
 
 app.get('/api/feeders/checkins', (req, res) => {

@@ -89,8 +89,7 @@ export class Statistics {
     return _.countBy(selectedVisits, 'feederId');
   }
 
-  getBirdMovements(id) {
-    
+  computeIndividualBirdMovements(id) {
     const locations = {};
     _.each(this.birds, (bird, id) => {
       locations[id] = undefined;
