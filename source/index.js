@@ -44,9 +44,12 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-
 app.get('/api/visits/summary', (req, res) => {
   res.json(statistics.computeVisitsForPopulation(DURATIONS.HOUR, DURATIONS.MINUTE));
+});
+
+app.get('/api/feeders/checkins', (req, res) => {
+  res.json(statistics.computeVisitsByFeederForPopulation(DURATIONS.HOUR));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
@@ -55,10 +58,6 @@ app.get('/api/birds/:id/feeders', (req, res) => {
 
 app.get('/api/birds/:id/movements', (req, res) => {
   res.json(statistics.comptueMovementsForIndividual(req.params.id));
-});
-
-app.get('/api/feeders/checkins', (req, res) => {
-  res.json(statistics.getFeederCheckins(DURATIONS.HOUR));
 });
 
 app.listen(port, () => {
