@@ -12,6 +12,9 @@ export default {
     [RESOURCES.RECENT_CHECKINS]: {
       duration: 30,
     },
+    [RESOURCES.ASSOCIATIONS]: {
+      timespan: 10
+    }
   },
   birds: {},
   feeders: {},
@@ -28,6 +31,7 @@ export default {
     birds: {
       checkins: {},
       movements: {},
+      associations: {},
     },
     feeders: {
       checkins: {},

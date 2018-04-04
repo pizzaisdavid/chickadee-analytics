@@ -76,6 +76,20 @@ describe('Statistics' , () => {
   });
 });
 
+describe('POPULATION LIFETIME: associations', () => {
+  _.map([
+    empty,
+  ], (dataset) => {
+    testDatasetForPopulation(dataset, (statistics) => {
+      const timespan = dataset.config[RESOURCES.ASSOCIATIONS].timespan;
+      assert.deepEqual(
+        statistics.computeAssociationsForPopulation(timespan),
+        dataset.statistics.birds.associations
+      );
+    });
+  });
+});
+
 function testDatasetForPopulation(dataset, callback) {
   it(dataset.name, () => {
     const statistics = new Statistics(dataset.clock);

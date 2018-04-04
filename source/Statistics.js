@@ -31,6 +31,7 @@ _.mixin({
 export const RESOURCES = {
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
   RECENT_CHECKINS: 'RECENT_CHECKINS',
+  ASSOCIATIONS: 'ASSOCIATIONS',
 };
 
 export const DURATIONS = {
@@ -161,5 +162,9 @@ export class Statistics {
       .groupByFeeder()
       .value();
     return _.merge(x, borks);
+  }
+
+  computeAssociationsForPopulation() {
+    return {};
   }
 }
