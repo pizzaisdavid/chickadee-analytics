@@ -46,7 +46,7 @@ app.get('/api/health', (req, res) => {
 
 
 app.get('/api/visits/summary', (req, res) => {
-  res.json(statistics.getVisitsByTime(DURATIONS.HOUR, DURATIONS.MINUTE));
+  res.json(statistics.computeVisitsForPopulation(DURATIONS.HOUR, DURATIONS.MINUTE));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {

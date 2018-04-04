@@ -51,7 +51,7 @@ export class Statistics {
     return this.visits.length;
   }
 
-  getVisitsByTime(duration, step) {
+  computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
