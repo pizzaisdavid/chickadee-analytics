@@ -1,5 +1,11 @@
 
-import * as _ from 'lodash';
+import _ from 'lodash';
+
+function filterVisitsById(visits, id) {
+  return _.filter(visits, (visit) => visit.birdId === id);
+}
+
+_.mixin({ 'filterVisitsById': filterVisitsById });
 
 export const RESOURCES = {
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
@@ -51,6 +57,10 @@ export class Statistics {
     return this.visits.length;
   }
 
+  filterVisitsById(visits, id) {
+    return _.filter(this.visits, (visit) => visit.birdId === id);
+  }
+
   computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = now - duration + 1;
@@ -70,10 +80,6 @@ export class Statistics {
     return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
   }
 
-  filterVisitsById(visits, id) {
-    return _.filter(this.visits, (visit) => visit.birdId === id);
-  }
-
   generateTimeSlots(start, stop, step) {
     const timestamps = _.range(start, stop);
     const slots = {};
@@ -85,8 +91,10 @@ export class Statistics {
   }
 
   computeVisitsByFeederForIndividual(id) {
-    const selectedVisits = this.filterVisitsById(this.visits, id);
-    return _.countBy(selectedVisits, 'feederId');
+    return _(this.visits)
+      .filterVisitsById(id)
+      .countBy('feederId')
+      .value();
   }
 
   comptueMovementsForIndividual(id) {
@@ -134,7 +142,7 @@ export class Statistics {
     _.each(this.feeders, (value, id) => {
       checkins[id] = 0;
     });
-    
+
     const x = _.countBy(selectedVisits, 'feederId');
 
     return _.merge(checkins, x);
