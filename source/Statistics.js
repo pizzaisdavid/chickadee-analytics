@@ -143,9 +143,8 @@ export class Statistics {
     return movements;
   }
 
-  computeVisitsByFeederForPopulation() {
+  computeVisitsByFeederForPopulation(duration) {
     const now = this.clock.timestamp;
-    const duration = this.config[RESOURCES.RECENT_CHECKINS].duration;
     const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
 
     const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);

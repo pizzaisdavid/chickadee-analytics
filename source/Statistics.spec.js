@@ -66,7 +66,11 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        assert.deepEqual(statistics.computeVisitsByFeederForPopulation(), dataset.statistics.feeders.checkins);
+        const duration = dataset.config[RESOURCES.RECENT_CHECKINS].duration;
+        assert.deepEqual(
+          statistics.computeVisitsByFeederForPopulation(duration),
+          dataset.statistics.feeders.checkins
+        );
       });
     });
   });
