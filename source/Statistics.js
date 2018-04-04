@@ -146,7 +146,7 @@ export class Statistics {
   computeVisitsByFeederForPopulation() {
     const now = this.clock.timestamp;
     const duration = this.config[RESOURCES.RECENT_CHECKINS].duration;
-    const oldestUnixTimestampAllowed = now - duration + 1;
+    const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
 
     const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
