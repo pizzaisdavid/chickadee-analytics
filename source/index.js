@@ -44,14 +44,6 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-app.get('/api/stuff', (req, res) => {
-  res.json({
-    [Api.RESOURCES.FEEDERS]: statistics.feeders,
-    [Api.RESOURCES.BIRDS]: statistics.birds,
-    [Api.RESOURCES.VISITS]: statistics.visits.length,
-  });
-  res.end();
-});
 
 app.get('/api/visits/summary', (req, res) => {
   res.json(statistics.getVisitsByTime(DURATIONS.HOUR, DURATIONS.MINUTE));
