@@ -17,9 +17,15 @@ function zero(source) {
   return destination;
 }
 
+function filterOldVisits(visits, limitTimestamp) {
+  return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
+}
+
 _.mixin({
   'filterByBirdId': filterByBirdId,
   'groupByFeederId': groupByFeederId,
+  'zero': zero,
+  'filterOldVisits': filterOldVisits,
 });
 
 export const RESOURCES = {
@@ -151,16 +157,11 @@ export class Statistics {
   }
 
   computeVisitsByFeederForPopulation(duration) {
-    const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
-    const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
-
-    const checkins = {};
-    _.each(this.feeders, (value, id) => {
-      checkins[id] = 0;
-    });
-
-    const x = _.countBy(selectedVisits, 'feederId');
-
-    return _.merge(checkins, x);
+    const x = _.zero(this.feeders);
+    const borks = _(this.visits)
+      .filterOldVisits(this.computeOldestAllowedTimestamp(duration))
+      .groupByFeederId()
+      .value();
+    return _.merge(x, borks);
   }
 }
