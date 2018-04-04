@@ -50,11 +50,11 @@ app.get('/api/visits/summary', (req, res) => {
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
-  res.json(statistics.getBirdsFeederVisits(req.params.id));
+  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id));
 });
 
 app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.computeIndividualBirdMovements(req.params.id));
+  res.json(statistics.comptueMovementsForIndividual(req.params.id));
 });
 
 app.get('/api/feeders/checkins', (req, res) => {

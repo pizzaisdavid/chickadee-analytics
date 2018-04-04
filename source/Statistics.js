@@ -84,12 +84,12 @@ export class Statistics {
     return slots;
   }
 
-  getBirdsFeederVisits(id) {
+  computeVisitsByFeederForIndividual(id) {
     const selectedVisits = this.filterVisitsById(this.visits, id);
     return _.countBy(selectedVisits, 'feederId');
   }
 
-  computeIndividualBirdMovements(id) {
+  comptueMovementsForIndividual(id) {
     const locations = {};
     _.each(this.birds, (bird, id) => {
       locations[id] = undefined;
