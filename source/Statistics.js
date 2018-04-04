@@ -58,10 +58,7 @@ export class Statistics {
     const oldestUnixTimestampAllowed = now - duration + 1;
 
     const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
-    const recentVisits = _.filter(this.visits, (visit) => {
-      return visit.timestamp >= oldestUnixTimestampAllowed;
-    });
-
+    const recentVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
     _.each(recentVisits, (visit) => {
       const timestamp = visit.timestamp;
@@ -69,6 +66,14 @@ export class Statistics {
       group[d]++;
     });
     return group;
+  }
+
+  filterVisitsByTimestamp(visits, limitTimestamp) {
+    return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
+  }
+
+  filterVisitsById(visits, id) {
+    return _.filter(this.visits, (visit) => visit.birdId === id);
   }
 
   generateTimeSlots(start, stop, step) {
@@ -82,21 +87,20 @@ export class Statistics {
   }
 
   getBirdsFeederVisits(id) {
-    const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.birdId === id;
-    });
+    const selectedVisits = this.filterVisitsById(this.visits, id);
     return _.countBy(selectedVisits, 'feederId');
   }
 
   getBirdMovements(id) {
 
     const locations = {};
-    _.each(this.birds, (bird) => {
-      locations[bird.id] = undefined;
+    _.each(this.birds, (bird, id) => {
+      locations[id] = undefined;
     });
 
     const movements = {};
-    const selectedVisits = _.filter(this.visits, (v) => v.birdId === id);
+    const selectedVisits = this.filterVisitsById(this.visits, id);
+
     _.each(selectedVisits, (visit) => {
       const bird = visit.birdId;
       if (locations[bird] === undefined) {
@@ -132,9 +136,7 @@ export class Statistics {
     const duration = this.config[RESOURCES.RECENT_CHECKINS].duration;
     const oldestUnixTimestampAllowed = now - duration + 1;
 
-    const selectedVisits = _.filter(this.visits, (visit) => {
-      return visit.timestamp  >= oldestUnixTimestampAllowed;
-    });
+    const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
     const checkins = {};
     _.each(this.feeders, (value, id) => {
