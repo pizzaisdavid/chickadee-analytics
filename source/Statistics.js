@@ -90,7 +90,7 @@ export class Statistics {
   }
 
   getBirdMovements(id) {
-
+    
     const locations = {};
     _.each(this.birds, (bird, id) => {
       locations[id] = undefined;
@@ -108,21 +108,16 @@ export class Statistics {
       } else {
         let start = locations[bird];
         let end = visit.feederId;
-        if (movements[start] === undefined) {
-          movements[start] = {};
-        }
-        if (movements[start][end] === undefined) {
-          movements[start][end] = 0;
-        }
-        movements[start][end]++;
+        let path = [start, end];
+        let count = _.get(movements, path, 0);
+        count++;
+        _.set(movements, path, count);
 
-        if (movements[end] === undefined) {
-          movements[end] = {};
-        }
-        if (movements[end][start] === undefined) {
-          movements[end][start] = 0;
-        }
-        movements[end][start]++;     
+        path = [end, start];
+        count = _.get(movements, path, 0);
+        count++;
+        _.set(movements, path, count);
+
         locations[bird] = visit.feederId;
       }
     });

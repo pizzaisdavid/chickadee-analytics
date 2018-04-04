@@ -50,8 +50,6 @@ describe('Statistics' , () => {
   describe('INDIVIDUAL LIFETIME: movement', () => {
     _.map([
       empty,
-      single,
-      simple,
       movement,
       movementUnordered,
     ], (dataset) => {
