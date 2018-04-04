@@ -9,9 +9,17 @@ function groupByFeederId(visits) {
   return _.countBy(visits, 'feederId');
 }
 
+function zero(source) {
+  const destination = {};
+  _.each(source, (value, key) => {
+    destination[key] = 0;
+  });
+  return destination;
+}
+
 _.mixin({
   'filterByBirdId': filterByBirdId,
-  'groupByFeederId': groupByFeederId
+  'groupByFeederId': groupByFeederId,
 });
 
 export const RESOURCES = {
@@ -143,9 +151,7 @@ export class Statistics {
   }
 
   computeVisitsByFeederForPopulation(duration) {
-    const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
-
     const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
 
     const checkins = {};

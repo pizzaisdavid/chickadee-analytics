@@ -78,7 +78,7 @@ describe('Statistics' , () => {
 
 function testDatasetForPopulation(dataset, callback) {
   it(dataset.name, () => {
-    const statistics = new Statistics(dataset.config, dataset.clock);
+    const statistics = new Statistics(dataset.clock);
     statistics.addBirds(dataset.birds);
     statistics.addFeeders(dataset.feeders);
     statistics.addVisits(dataset.visits);
@@ -88,7 +88,7 @@ function testDatasetForPopulation(dataset, callback) {
 
 function testDatasetForIndividuals(dataset, callback) {
   describe(dataset.name, () => {
-    const statistics = new Statistics(dataset.config, dataset.clock);
+    const statistics = new Statistics(dataset.clock);
     statistics.addBirds(dataset.birds);
     statistics.addFeeders(dataset.feeders);
     statistics.addVisits(dataset.visits);
