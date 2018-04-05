@@ -57,7 +57,7 @@ app.get('/api/birds/:id/movements', (req, res) => {
 });
 
 app.get('/api/birds/associations', (req, res) => {
-  res.json(statistics.computeAssociationsForPopulation(30));
+  res.json(statistics.computeAssociationsForPopulation(2));
 });
 
 app.listen(port, () => {
