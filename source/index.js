@@ -45,7 +45,8 @@ app.get('/api/visits/summary', (req, res) => {
 });
 
 app.get('/api/feeders/checkins', (req, res) => {
-  res.json(statistics.computeVisitsByFeederForPopulation(DURATIONS.HOUR));
+  const timespan = getTimespan(req.query.timespan);
+  res.json(statistics.computeVisitsByFeederForPopulation(timespan));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
@@ -56,9 +57,13 @@ app.get('/api/birds/:id/movements', (req, res) => {
   res.json(statistics.computeMovementsForIndividual(req.params.id));
 });
 
-app.get('/api/birds/associations', (req, res) => {
-  res.json(statistics.computeAssociationsForPopulation(2));
-});
+function getTimespan(value) {
+  if (value === undefined) {
+    return DURATIONS.HOUR;
+  } else {
+    return DURATIONS.LIFETIME;
+  }
+}
 
 app.listen(port, () => {
   console.log(`Analytics running on ${port}`);
