@@ -58,10 +58,18 @@ app.get('/api/birds/:id/movements', (req, res) => {
 });
 
 function getTimespan(value) {
-  if (value === undefined) {
-    return DURATIONS.HOUR;
-  } else {
-    return DURATIONS.LIFETIME;
+  switch (value) {
+    case 'day':
+      return DURATIONS.DAY;
+    case 'week':
+      return DURATIONS.WEEK;
+    case 'month':
+      return DURATIONS.MONTH;
+    case 'year':
+      return DURATIONS.YEAR;
+    case 'all':
+    default:
+      return DURATIONS.LIFETIME;
   }
 }
 
