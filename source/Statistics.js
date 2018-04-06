@@ -51,10 +51,6 @@ export class Statistics {
     });
   }
 
-  getTotalVisits() {
-    return this.visits.length;
-  }
-
   computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
@@ -66,17 +62,8 @@ export class Statistics {
     return _.merge(group, ye);
   }
 
-  computeOldestAllowedTimestamp(duration) {
-    const EXCLUSIVE_INCLUDE = 1;
-    return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
-  }
-
   computeGOUP(timestamp, step) {
     return Math.floor(timestamp / step) * step;
-  }
-
-  filterVisitsByTimestamp(visits, limitTimestamp) {
-    return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
   }
 
   generateTimeSlots(start, stop, step) {
@@ -128,12 +115,19 @@ export class Statistics {
   }
 
   computeVisitsByFeederForPopulation(duration) {
-    // todo: remove the zeroing out
-    const x = _.zero(this.feeders);
-    const borks = _(this.visits)
+    return _(this.visits)
       .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByFeeder()
       .value();
-    return _.merge(x, borks);
   }
+
+  computeOldestAllowedTimestamp(duration) {
+    const EXCLUSIVE_INCLUDE = 1;
+    return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
+  }
+
+  getTotalVisits() {
+    return this.visits.length;
+  }
+  
 }
