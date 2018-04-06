@@ -1,6 +1,8 @@
 
 import _ from './birddash';
 
+import { RESOUCE } from './constants';
+
 export class Statistics {
 
   constructor(clock) {
@@ -91,9 +93,9 @@ export class Statistics {
     return movements;
   }
 
-  computeVisitsByFeederForIndividual(id) {
+  computeVisitsByFeederForIndividual(bird) {
     return _(this.visits)
-      .filterByBird(id)
+      .filterByBird(bird)
       .countByFeeder()
       .value();
   }
@@ -111,7 +113,21 @@ export class Statistics {
   }
 
   getTotalVisits() {
-    return this.visits.length;
+    return _.size(this.visits);
+  }
+
+  computeAssociationsForPopulation(timespan) {
+    return _.symmetric(_.zipObject(
+      this.birds,
+      _.map(this.birds, (bird) => this.computeForwardAssociationsForIndividual(bird, timespan))
+    ));
+  }
+
+  computeForwardAssociationsForIndividual(bird, timespan) {
+    return _(this.visits)
+      .filterForwardAssociations(bird, timespan)
+      .countByBird()
+      .value();
   }
 
 }

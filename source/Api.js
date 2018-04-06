@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { EventEmitter } from 'events';
 
 import config from './config';
-import { RESOURCE } from './Statistics';
+import { RESOURCE } from './constants';
 
 export default class Api extends EventEmitter {
 

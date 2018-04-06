@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import Api from './Api';
 import { Clock } from './Clock';
-import { RESOURCE, DURATION } from '../constants';
+import { RESOURCE, DURATION } from './constants';
 import { Statistics } from './Statistics';
 
 const app = express();
