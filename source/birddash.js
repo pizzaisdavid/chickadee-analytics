@@ -72,16 +72,8 @@ function symmetric(matrix) {
   const newMatrix = {};
   _.each(matrix, (row, key1) => {
     _.each(row, (value, key2) => {
-      let v1 = 0;
-      let v2 = 0;
-      try {
-        v1 = matrix[key1][key2];
-      } catch (e) {
-      }
-      try {
-        v2 = matrix[key2][key1];
-      } catch (e) {
-      }
+      const v1 = _.get(matrix, [key1, key2], 0);
+      const v2 = _.get(matrix, [key2, key1], 0);
       const total = v1 + v2;
       _.set(newMatrix, [key1, key2], total);
       _.set(newMatrix, [key2, key1], total);

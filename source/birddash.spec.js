@@ -10,15 +10,30 @@ describe('birddash', () => {
 
     it('square', () => {
       const object = {
-        a: { b: 2 },
+        a: { b: 1 },
         b: { a: 1 },
       };
   
       const expected = {
-        a: { b: 3 },
-        b: { a: 3 },
+        a: { b: 2 },
+        b: { a: 2 },
       };
 
+      assert.deepEqual(_.symmetric(object), expected);
+    });
+
+    it('jagged - one row has one, the other does not.', () => {
+      const object = {
+        a: { b: 1, c: 1 },
+        b: { a: 1, c: 1 },
+        c: { a: 1 }
+      };
+  
+      const expected = {
+        a: { b: 2, c: 2 },
+        b: { a: 2, c: 1 },
+        c: { a: 2, b: 1 },
+      };
       assert.deepEqual(_.symmetric(object), expected);
     });
   });
