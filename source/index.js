@@ -57,6 +57,11 @@ app.get('/api/birds/:id/movements', (req, res) => {
   res.json(statistics.computeMovementsForIndividual(req.params.id));
 });
 
+app.get('/api/birds/associations', (req, res) => {
+  const timespan = getTimespan(req.query.timespan);
+  res.json(statistics.computeAssociationsForPopulation());
+});
+
 function getTimespan(value) {
   switch (value) {
     case 'day':

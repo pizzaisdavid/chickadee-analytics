@@ -9,8 +9,40 @@ function filterByFeeder(list, id) {
   return _.filter(list, (item) => item.feederId === id);
 }
 
-function groupByFeeder(visits) {
+function countByFeeder(visits) {
   return _.countBy(visits, 'feederId');
+}
+
+function groupByFeeder(visits) {
+  return _.groupBy(visits, 'feederId');
+}
+
+function computeAssociations(birds, visits, timespan) {
+  let timestamp = -Infinity;
+  const associations = {};
+  _(birds)
+    .each((bird, id) => {
+      let timestamp = -Infinity;
+      let feeder = null;
+      associations[id] = _(visits)
+        .filter((visit) => {
+          if (visit.birdId === bird.id) {
+            feeder = visit.feederId;
+            timestamp = visit.timestamp;
+            return false;
+          }
+          if (feeder !== visit.feederId) {
+            return false;
+          }
+          if (timestamp + timespan < visit.timestamp) {
+            return false;
+          }
+          return true;
+        })
+        .countBy('birdId')
+        .value();
+    });
+    return associations;
 }
 
 function zero(source) {
@@ -29,8 +61,10 @@ _.mixin({
   'filterByBirdId': filterByBirdId,
   'filterByFeeder': filterByFeeder,
   'groupByFeeder': groupByFeeder,
+  'countByFeeder': countByFeeder,
   'zero': zero,
   'filterOldVisits': filterOldVisits,
+  'computeAssociations': computeAssociations,
 });
 
 export const RESOURCES = {
@@ -160,7 +194,7 @@ export class Statistics {
   computeVisitsByFeederForIndividual(id) {
     return _(this.visits)
       .filterByBirdId(id)
-      .groupByFeeder()
+      .countByFeeder()
       .value();
   }
 
@@ -169,29 +203,15 @@ export class Statistics {
     const x = _.zero(this.feeders);
     const borks = _(this.visits)
       .filterOldVisits(this.computeOldestAllowedTimestamp(duration))
-      .groupByFeeder()
+      .countByFeeder()
       .value();
     return _.merge(x, borks);
   }
 
-  computeAssociationsForPopulation(timespan) {
-    // TODO: first filter by feeder.
-    const lookforward = timespan / 2;
-    const associations = {};
-    _(this.visits)
-      .filterByFeeder('JPHQ')
-      .each((visit, index) => {
-        if (index % 100 == 0) {
-          console.log(index);
-        }
-        const furthestAwayTimestamp = visit.timestamp + lookforward;
-        const associatedBirds = this.findAssociatedBirds(furthestAwayTimestamp, visit.birdId, visit.feederId, index);
-        const smallAssociations = _.countBy(associatedBirds, 'birdId');
-        const asso = _.get(associations, [visit.birdId], {});
-        const ye = _.assign(asso, smallAssociations);
-        associations[visit.birdId] = ye;
-    });
-    return this.makeSymetric(associations);
+  computeAssociationsForPopulation(timespan) {    
+    return this.makeSymetric(_(this.birds)
+      .computeAssociations(this.visits, timespan)
+      .value());
   }
 
   makeSymetric(matrix) {
