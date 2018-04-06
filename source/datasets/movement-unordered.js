@@ -1,22 +1,15 @@
 
-import { RESOURCES } from '../Statistics';
 
 export default {
   name: 'movement-unordered',
   clock: { timestamp: 60 },
   config: {},
-  birds: {
-    a: { id: 'a' },
-  },
-  feeders: {
-    X: { id: 'X', longitude: 0, latitude: 0 },
-    Y: { id: 'Y', longitude: 0, latitude: 0 },
-    Z: { id: 'Z', longitude: 0, latitude: 0 },
-  },
+  birds: [ 'a' ],
+  feeders: [ 'X', 'Y', 'Z' ],
   visits: [
-    { timestamp: 51, feederId: 'Y', birdId: 'a'},
-    { timestamp: 52, feederId: 'Z', birdId: 'a'},
-    { timestamp: 50, feederId: 'X', birdId: 'a'},
+    { timestamp: 51, feeder: 'Y', bird: 'a'},
+    { timestamp: 52, feeder: 'Z', bird: 'a'},
+    { timestamp: 50, feeder: 'X', bird: 'a'},
   ],
   statistics: {
     birds: {

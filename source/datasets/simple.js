@@ -1,33 +1,28 @@
 
-import { RESOURCES } from '../Statistics';
+import { RESOURCE } from '../constants';
 
 export default {
   name: 'simple',
   clock: { timestamp: 60 },
   config: {
-    [RESOURCES.RECENT_VISITS_SUMMARY]: {
+    [RESOURCE.RECENT_VISITS_SUMMARY]: {
       duration: 30,
       grouping: 10,
     },
-    [RESOURCES.RECENT_CHECKINS]: {
+    [RESOURCE.RECENT_CHECKINS]: {
       duration: 30,
     },
-    [RESOURCES.ASSOCIATIONS]: {
+    [RESOURCE.ASSOCIATIONS]: {
       timespan: 10
     }
   },
-  birds: {
-    a: { id: 'a' },
-    b: { id: 'b' },    
-  },
-  feeders: {
-    Z: { id: 'Z', longitude: 0, latitude: 0 },
-  },
+  birds: [ 'a', 'b' ],
+  feeders: [ 'Z' ],
   visits: [
-    { timestamp: 50, feederId: 'Z', birdId: 'a'},
-    { timestamp: 50, feederId: 'Z', birdId: 'b'},
-    { timestamp: 55, feederId: 'Z', birdId: 'a'},
-    { timestamp: 55, feederId: 'Z', birdId: 'b'},
+    { timestamp: 50, feeder: 'Z', bird: 'a'},
+    { timestamp: 50, feeder: 'Z', bird: 'b'},
+    { timestamp: 55, feeder: 'Z', bird: 'a'},
+    { timestamp: 55, feeder: 'Z', bird: 'b'},
   ],
   statistics: {
     feeders: {
@@ -51,8 +46,8 @@ export default {
         b: {},
       },
       associations: {
-        a: { b: 2 },
-        b: { a: 2 },
+        a: { b: 3 },
+        b: { a: 3 },
       }
     },
   },

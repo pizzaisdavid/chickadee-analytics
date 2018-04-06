@@ -1,0 +1,16 @@
+
+export const RESOURCE = {
+  RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
+  RECENT_CHECKINS: 'RECENT_CHECKINS',
+  ASSOCIATIONS: 'ASSOCIATIONS',
+};
+
+export const DURATION = {
+  MINUTE: 60,
+  HOUR: 60 * 60,
+  DAY: 60 * 60 * 24,
+  WEEK: 60 * 60 * 24 * 7,
+  MONTH: 60 * 60 * 24 * 30,
+  YEAR: 60 * 60 * 24 * 365,
+  LIFETIME: Infinity,
+};

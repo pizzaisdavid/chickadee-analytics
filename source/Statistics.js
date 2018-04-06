@@ -1,59 +1,13 @@
 
-import _ from 'lodash';
+import _ from './birddash';
 
-function filterByBirdId(list, id) {
-  return _.filter(list, (item) => item.birdId === id);
-}
-
-function filterByFeeder(list, id) {
-  return _.filter(list, (item) => item.feederId === id);
-}
-
-function groupByFeeder(visits) {
-  return _.countBy(visits, 'feederId');
-}
-
-function zero(source) {
-  const destination = {};
-  _.each(source, (value, key) => {
-    destination[key] = 0;
-  });
-  return destination;
-}
-
-function filterOldVisits(visits, limitTimestamp) {
-  return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
-}
-
-_.mixin({
-  'filterByBirdId': filterByBirdId,
-  'filterByFeeder': filterByFeeder,
-  'groupByFeeder': groupByFeeder,
-  'zero': zero,
-  'filterOldVisits': filterOldVisits,
-});
-
-export const RESOURCES = {
-  RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
-  RECENT_CHECKINS: 'RECENT_CHECKINS',
-  ASSOCIATIONS: 'ASSOCIATIONS',
-};
-
-export const DURATIONS = {
-  MINUTE: 60,
-  HOUR: 60 * 60,
-  DAY: 60 * 60 * 24,
-  WEEK: 60 * 60 * 24 * 7,
-  MONTH: 60 * 60 * 24 * 30,
-  YEAR: 60 * 60 * 24 * 365,
-  LIFETIME: Infinity,
-};
+import { RESOUCE } from './constants';
 
 export class Statistics {
 
   constructor(clock) {
-    this.birds = {};
-    this.feeders = {};
+    this.birds = [];
+    this.feeders = [];
     this.visits = [];
     this.clock = clock;
   }
@@ -69,51 +23,33 @@ export class Statistics {
   }
 
   addBirds(birds) {
-    this.birds = _.merge(this.birds, birds);
+    this.birds = _.uniq(this.birds.concat(birds));
   }
 
   addFeeders(feeders) {
-    this.feeders = _.merge(this.feeders, feeders);
+    this.feeders = _.uniq(this.feeders.concat(feeders));
   }
 
   addVisits(visits) {
-    // is there a better way?
     this.visits = this.visits.concat(visits);
     this.visits.sort((a, b) => {
       return a.timestamp - b.timestamp;
     });
   }
 
-  getTotalVisits() {
-    return this.visits.length;
-  }
-
-  filterVisitsById(visits, id) {
-    return _.filter(visits, (visit) => visit.birdId === id);
-  }
-
   computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
-
     const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
-    const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
-
-    const ye = _.countBy(selectedVisits, (visit) => this.computeGOUP(visit.timestamp, step));
+    const ye = _(this.visits)
+      .filterByTimestampsOlderThan(oldestUnixTimestampAllowed)
+      .countByTimestampStep(step)
+      .value();
     return _.merge(group, ye);
-  }
-
-  computeOldestAllowedTimestamp(duration) {
-    const EXCLUSIVE_INCLUDE = 1;
-    return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
   }
 
   computeGOUP(timestamp, step) {
     return Math.floor(timestamp / step) * step;
-  }
-
-  filterVisitsByTimestamp(visits, limitTimestamp) {
-    return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
   }
 
   generateTimeSlots(start, stop, step) {
@@ -130,17 +66,17 @@ export class Statistics {
     const locations = _.zero(this.birds);
 
     const movements = {};
-    const selectedVisits = this.filterVisitsById(this.visits, id);
+    const selectedVisits = _.filterByBird(this.visits, id);
 
     _.each(selectedVisits, (visit) => {
-      const bird = visit.birdId;
+      const bird = visit.bird;
       if (!locations[bird]) {
-        locations[bird] = visit.feederId;
-      } else if (locations[bird] === visit.feederId) {
+        locations[bird] = visit.feeder;
+      } else if (locations[bird] === visit.feeder) {
         // do nothing
       } else {
         let start = locations[bird];
-        let end = visit.feederId;
+        let end = visit.feeder;
         let path = [start, end];
         let count = _.get(movements, path, 0);
         count++;
@@ -151,86 +87,47 @@ export class Statistics {
         count++;
         _.set(movements, path, count);
 
-        locations[bird] = visit.feederId;
+        locations[bird] = visit.feeder;
       }
     });
     return movements;
   }
 
-  computeVisitsByFeederForIndividual(id) {
+  computeVisitsByFeederForIndividual(bird) {
     return _(this.visits)
-      .filterByBirdId(id)
-      .groupByFeeder()
+      .filterByBird(bird)
+      .countByFeeder()
       .value();
   }
 
   computeVisitsByFeederForPopulation(duration) {
-    // todo: remove the zeroing out
-    const x = _.zero(this.feeders);
-    const borks = _(this.visits)
-      .filterOldVisits(this.computeOldestAllowedTimestamp(duration))
-      .groupByFeeder()
+    return _(this.visits)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
+      .countByFeeder()
       .value();
-    return _.merge(x, borks);
+  }
+
+  computeOldestAllowedTimestamp(duration) {
+    const EXCLUSIVE_INCLUDE = 1;
+    return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
+  }
+
+  getTotalVisits() {
+    return _.size(this.visits);
   }
 
   computeAssociationsForPopulation(timespan) {
-    // TODO: first filter by feeder.
-    const lookforward = timespan / 2;
-    const associations = {};
-    _(this.visits)
-      .filterByFeeder('JPHQ')
-      .each((visit, index) => {
-        if (index % 100 == 0) {
-          console.log(index);
-        }
-        const furthestAwayTimestamp = visit.timestamp + lookforward;
-        const associatedBirds = this.findAssociatedBirds(furthestAwayTimestamp, visit.birdId, visit.feederId, index);
-        const smallAssociations = _.countBy(associatedBirds, 'birdId');
-        const asso = _.get(associations, [visit.birdId], {});
-        const ye = _.assign(asso, smallAssociations);
-        associations[visit.birdId] = ye;
-    });
-    return this.makeSymetric(associations);
+    return _.symmetric(_.zipObject(
+      this.birds,
+      _.map(this.birds, (bird) => this.computeForwardAssociationsForIndividual(bird, timespan))
+    ));
   }
 
-  makeSymetric(matrix) {
-    const newm = {};
-    _.each(matrix, (row, key1) => {
-      _.each(row, (value, key2) => {
-        let v1 = 0;
-        let v2 = 0;
-        try {
-          v1 = matrix[key1][key2];
-        } catch (e) {
-        }
-        try {
-          v2 = matrix[key2][key1];
-        } catch (e) {
-        }
-        const total = v1 + v2;
-        _.set(newm, [key1, key2], total);
-        _.set(newm, [key2, key1], total);
-      })
-    });
-    return newm;
+  computeForwardAssociationsForIndividual(bird, timespan) {
+    return _(this.visits)
+      .filterForwardAssociations(bird, timespan)
+      .countByBird()
+      .value();
   }
 
-  findAssociatedBirds(limitTimestamp, id, feeder, index) {
-    const visits = [];
-    _(this.visits)
-      .slice(index + 1)
-      .each((visit) => {
-        if (visit.timestamp > limitTimestamp) {
-          return false;
-        }
-        if (visit.birdId === id) {
-          return false;
-        }
-        if (visit.feederId === feeder) {
-          visits.push(visit);
-        }
-      });
-  return visits;
-  }
 }

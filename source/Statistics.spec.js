@@ -2,7 +2,8 @@
 import * as _ from 'lodash';
 import assert from 'assert';
 
-import { Statistics, RESOURCES } from './Statistics';
+import { RESOURCE } from './constants';
+import { Statistics } from './Statistics';
 import { empty, single, simple, movement, movementUnordered } from './datasets';
 
 describe('Statistics' , () => {
@@ -26,8 +27,8 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        const duration = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
-        const grouping = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
+        const duration = dataset.config[RESOURCE.RECENT_VISITS_SUMMARY].duration;
+        const grouping = dataset.config[RESOURCE.RECENT_VISITS_SUMMARY].grouping;
         const actual = statistics.computeVisitsForPopulation(duration, grouping);
         const expected = dataset.statistics.visits.grouped;
         assert.deepEqual(actual, expected);
@@ -66,7 +67,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        const duration = dataset.config[RESOURCES.RECENT_CHECKINS].duration;
+        const duration = dataset.config[RESOURCE.RECENT_CHECKINS].duration;
         assert.deepEqual(
           statistics.computeVisitsByFeederForPopulation(duration),
           dataset.statistics.feeders.checkins
@@ -74,20 +75,20 @@ describe('Statistics' , () => {
       });
     });
   });
-});
 
-describe('POPULATION LIFETIME: associations', () => {
-  _.map([
-    empty,
-    single,
-    simple,
-  ], (dataset) => {
-    testDatasetForPopulation(dataset, (statistics) => {
-      const timespan = dataset.config[RESOURCES.ASSOCIATIONS].timespan;
-      assert.deepEqual(
-        statistics.computeAssociationsForPopulation(timespan),
-        dataset.statistics.birds.associations
-      );
+  describe('POPULATION LIFETIME: associations', () => {
+    _.map([
+      empty,
+      single,
+      simple,
+    ], (dataset) => {
+      testDatasetForPopulation(dataset, (statistics) => {
+        const timespan = dataset.config[RESOURCE.ASSOCIATIONS].timespan;
+        assert.deepEqual(
+          statistics.computeAssociationsForPopulation(timespan),
+          dataset.statistics.birds.associations
+        );
+      });
     });
   });
 });
@@ -109,9 +110,8 @@ function testDatasetForIndividuals(dataset, callback) {
     statistics.addFeeders(dataset.feeders);
     statistics.addVisits(dataset.visits);
     _.map(dataset.birds, (bird) => {
-      const id = bird.id;
-      it(id, () => {
-        callback(statistics, id)
+      it(bird, () => {
+        callback(statistics, bird)
       });
     });
   });
