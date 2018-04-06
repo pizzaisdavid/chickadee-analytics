@@ -16,9 +16,7 @@ export default {
       timespan: 10
     }
   },
-  birds: { 
-    a: { id: 'a' },
-  },
+  birds: [ 'a' ],
   feeders: {
     Z: { id: 'Z', longitude: 0, latitude: 0 },
   },

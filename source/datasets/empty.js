@@ -16,7 +16,7 @@ export default {
       timespan: 10
     }
   },
-  birds: {},
+  birds: [],
   feeders: {},
   visits: [],
   statistics: {

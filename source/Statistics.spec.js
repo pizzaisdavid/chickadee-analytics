@@ -109,9 +109,8 @@ function testDatasetForIndividuals(dataset, callback) {
     statistics.addFeeders(dataset.feeders);
     statistics.addVisits(dataset.visits);
     _.map(dataset.birds, (bird) => {
-      const id = bird.id;
-      it(id, () => {
-        callback(statistics, id)
+      it(bird, () => {
+        callback(statistics, bird)
       });
     });
   });

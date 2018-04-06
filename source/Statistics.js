@@ -21,12 +21,12 @@ function computeAssociations(birds, visits, timespan) {
   let timestamp = -Infinity;
   const associations = {};
   _(birds)
-    .each((bird, id) => {
+    .each((bird) => {
       let timestamp = -Infinity;
       let feeder = null;
-      associations[id] = _(visits)
+      associations[bird] = _(visits)
         .filter((visit) => {
-          if (visit.birdId === bird.id) {
+          if (visit.birdId === bird) {
             feeder = visit.feederId;
             timestamp = visit.timestamp;
             return false;
@@ -86,7 +86,7 @@ export const DURATIONS = {
 export class Statistics {
 
   constructor(clock) {
-    this.birds = {};
+    this.birds = [];
     this.feeders = {};
     this.visits = [];
     this.clock = clock;
@@ -103,7 +103,7 @@ export class Statistics {
   }
 
   addBirds(birds) {
-    this.birds = _.merge(this.birds, birds);
+    this.birds = _.uniq(this.birds.concat(birds));
   }
 
   addFeeders(feeders) {
@@ -111,7 +111,6 @@ export class Statistics {
   }
 
   addVisits(visits) {
-    // is there a better way?
     this.visits = this.visits.concat(visits);
     this.visits.sort((a, b) => {
       return a.timestamp - b.timestamp;
@@ -234,23 +233,5 @@ export class Statistics {
       })
     });
     return newm;
-  }
-
-  findAssociatedBirds(limitTimestamp, id, feeder, index) {
-    const visits = [];
-    _(this.visits)
-      .slice(index + 1)
-      .each((visit) => {
-        if (visit.timestamp > limitTimestamp) {
-          return false;
-        }
-        if (visit.birdId === id) {
-          return false;
-        }
-        if (visit.feederId === feeder) {
-          visits.push(visit);
-        }
-      });
-  return visits;
   }
 }
