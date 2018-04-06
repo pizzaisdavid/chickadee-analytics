@@ -21,7 +21,7 @@ export class Statistics {
 
   constructor(clock) {
     this.birds = [];
-    this.feeders = {};
+    this.feeders = [];
     this.visits = [];
     this.clock = clock;
   }
@@ -41,7 +41,7 @@ export class Statistics {
   }
 
   addFeeders(feeders) {
-    this.feeders = _.merge(this.feeders, feeders);
+    this.feeders = _.uniq(this.feeders.concat(feeders));
   }
 
   addVisits(visits) {

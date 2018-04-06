@@ -17,9 +17,7 @@ export default {
     }
   },
   birds: [ 'a' ],
-  feeders: {
-    Z: { id: 'Z', longitude: 0, latitude: 0 },
-  },
+  feeders: [ 'Z' ],
   visits: [
     { timestamp: 55, feederId: 'Z', birdId: 'a'},
   ],

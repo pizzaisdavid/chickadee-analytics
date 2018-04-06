@@ -9,8 +9,8 @@ _.mixin({
   'filterByTimestampsOlderThan': filterByTimestampsOlderThan,
 });
 
-function filterByBird(list, id) {
-  return _.filter(list, (item) => item.birdId === id);
+function filterByBird(list, bird) {
+  return _.filter(list, (item) => item.birdId === bird);
 }
 
 function filterByFeeder(list, id) {
@@ -25,10 +25,10 @@ function groupByFeeder(visits) {
   return _.groupBy(visits, 'feederId');
 }
 
-function zero(source) {
+function zero(list) {
   const destination = {};
-  _.each(source, (value, key) => {
-    destination[key] = 0;
+  _.each(list, (value) => {
+    destination[value] = 0;
   });
   return destination;
 }

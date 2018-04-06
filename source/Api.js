@@ -91,21 +91,11 @@ export default class Api extends EventEmitter {
   }
 
   prepareBirds(birds) {
-    return _
-      .chain(birds)
-      .map((bird) => {
-        return { id: bird.rfid };
-      })
-      .keyBy('id')
-      .value();
+    return _.map(birds, (bird) => bird.rfid);
   }
 
   prepareFeeders(feeders) {
-    return _
-      .chain(feeders)
-      .map((feeder) => _.pick(feeder, ['id', 'latitude', 'longitude']))
-      .keyBy('id')
-      .value();
+    return _.map((feeder) => feeder.id);
   }
 
   prepareVisits(visits) {

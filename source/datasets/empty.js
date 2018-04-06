@@ -17,7 +17,7 @@ export default {
     }
   },
   birds: [],
-  feeders: {},
+  feeders: [],
   visits: [],
   statistics: {
     visits: {
