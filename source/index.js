@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import Api from './Api';
 import { Clock } from './Clock';
-import { RESOURCES, DURATIONS, Statistics } from './Statistics';
+import { RESOURCES, DURATION, Statistics } from './Statistics';
 
 const app = express();
 
@@ -41,7 +41,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/visits/summary', (req, res) => {
-  res.json(statistics.computeVisitsForPopulation(DURATIONS.HOUR, DURATIONS.MINUTE));
+  res.json(statistics.computeVisitsForPopulation(DURATION.HOUR, DURATION.MINUTE));
 });
 
 app.get('/api/feeders/checkins', (req, res) => {
@@ -65,16 +65,16 @@ app.get('/api/birds/associations', (req, res) => {
 function getTimespan(value) {
   switch (value) {
     case 'day':
-      return DURATIONS.DAY;
+      return DURATION.DAY;
     case 'week':
-      return DURATIONS.WEEK;
+      return DURATION.WEEK;
     case 'month':
-      return DURATIONS.MONTH;
+      return DURATION.MONTH;
     case 'year':
-      return DURATIONS.YEAR;
+      return DURATION.YEAR;
     case 'all':
     default:
-      return DURATIONS.LIFETIME;
+      return DURATION.LIFETIME;
   }
 }
 
