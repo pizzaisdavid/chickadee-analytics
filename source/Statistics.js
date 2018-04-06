@@ -1,71 +1,5 @@
 
-import _ from 'lodash';
-
-function filterByBirdId(list, id) {
-  return _.filter(list, (item) => item.birdId === id);
-}
-
-function filterByFeeder(list, id) {
-  return _.filter(list, (item) => item.feederId === id);
-}
-
-function countByFeeder(visits) {
-  return _.countBy(visits, 'feederId');
-}
-
-function groupByFeeder(visits) {
-  return _.groupBy(visits, 'feederId');
-}
-
-function computeAssociations(birds, visits, timespan) {
-  let timestamp = -Infinity;
-  const associations = {};
-  _(birds)
-    .each((bird) => {
-      let timestamp = -Infinity;
-      let feeder = null;
-      associations[bird] = _(visits)
-        .filter((visit) => {
-          if (visit.birdId === bird) {
-            feeder = visit.feederId;
-            timestamp = visit.timestamp;
-            return false;
-          }
-          if (feeder !== visit.feederId) {
-            return false;
-          }
-          if (timestamp + timespan < visit.timestamp) {
-            return false;
-          }
-          return true;
-        })
-        .countBy('birdId')
-        .value();
-    });
-    return associations;
-}
-
-function zero(source) {
-  const destination = {};
-  _.each(source, (value, key) => {
-    destination[key] = 0;
-  });
-  return destination;
-}
-
-function filterOldVisits(visits, limitTimestamp) {
-  return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
-}
-
-_.mixin({
-  'filterByBirdId': filterByBirdId,
-  'filterByFeeder': filterByFeeder,
-  'groupByFeeder': groupByFeeder,
-  'countByFeeder': countByFeeder,
-  'zero': zero,
-  'filterOldVisits': filterOldVisits,
-  'computeAssociations': computeAssociations,
-});
+import _ from './birddash';
 
 export const RESOURCES = {
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
@@ -192,7 +126,7 @@ export class Statistics {
 
   computeVisitsByFeederForIndividual(id) {
     return _(this.visits)
-      .filterByBirdId(id)
+      .filterByBird(id)
       .countByFeeder()
       .value();
   }
@@ -201,37 +135,9 @@ export class Statistics {
     // todo: remove the zeroing out
     const x = _.zero(this.feeders);
     const borks = _(this.visits)
-      .filterOldVisits(this.computeOldestAllowedTimestamp(duration))
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByFeeder()
       .value();
     return _.merge(x, borks);
-  }
-
-  computeAssociationsForPopulation(timespan) {    
-    return this.makeSymetric(_(this.birds)
-      .computeAssociations(this.visits, timespan)
-      .value());
-  }
-
-  makeSymetric(matrix) {
-    const newm = {};
-    _.each(matrix, (row, key1) => {
-      _.each(row, (value, key2) => {
-        let v1 = 0;
-        let v2 = 0;
-        try {
-          v1 = matrix[key1][key2];
-        } catch (e) {
-        }
-        try {
-          v2 = matrix[key2][key1];
-        } catch (e) {
-        }
-        const total = v1 + v2;
-        _.set(newm, [key1, key2], total);
-        _.set(newm, [key2, key1], total);
-      })
-    });
-    return newm;
   }
 }
