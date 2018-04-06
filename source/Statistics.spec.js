@@ -2,7 +2,8 @@
 import * as _ from 'lodash';
 import assert from 'assert';
 
-import { Statistics, RESOURCE } from './Statistics';
+import { RESOURCE } from './constants';
+import { Statistics } from './Statistics';
 import { empty, single, simple, movement, movementUnordered } from './datasets';
 
 describe('Statistics' , () => {

@@ -1,5 +1,5 @@
 
-import { RESOURCE } from '../Statistics';
+import { RESOURCE } from '../constants';
 
 export default {
   name: 'empty',

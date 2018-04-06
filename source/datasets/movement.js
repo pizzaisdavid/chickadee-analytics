@@ -1,6 +1,4 @@
 
-import { RESOURCES } from '../Statistics';
-
 export default {
   name: 'movement',
   clock: { timestamp: 60 },

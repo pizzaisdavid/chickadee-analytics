@@ -1,5 +1,4 @@
 
-import { RESOURCES } from '../Statistics';
 
 export default {
   name: 'movement-unordered',
