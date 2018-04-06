@@ -10,19 +10,19 @@ _.mixin({
 });
 
 function filterByBird(list, bird) {
-  return _.filter(list, (item) => item.birdId === bird);
+  return _.filter(list, (item) => item.bird === bird);
 }
 
-function filterByFeeder(list, id) {
-  return _.filter(list, (item) => item.feederId === id);
+function filterByFeeder(list, feeder) {
+  return _.filter(list, (item) => item.feeder === feeder);
 }
 
 function countByFeeder(visits) {
-  return _.countBy(visits, 'feederId');
+  return _.countBy(visits, 'feeder');
 }
 
 function groupByFeeder(visits) {
-  return _.groupBy(visits, 'feederId');
+  return _.groupBy(visits, 'feeder');
 }
 
 function zero(list) {

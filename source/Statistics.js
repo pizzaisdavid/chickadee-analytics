@@ -56,7 +56,7 @@ export class Statistics {
   }
 
   filterVisitsById(visits, id) {
-    return _.filter(visits, (visit) => visit.birdId === id);
+    return _.filter(visits, (visit) => visit.bird === id);
   }
 
   computeVisitsForPopulation(duration, step) {
@@ -100,14 +100,14 @@ export class Statistics {
     const selectedVisits = this.filterVisitsById(this.visits, id);
 
     _.each(selectedVisits, (visit) => {
-      const bird = visit.birdId;
+      const bird = visit.bird;
       if (!locations[bird]) {
-        locations[bird] = visit.feederId;
-      } else if (locations[bird] === visit.feederId) {
+        locations[bird] = visit.feeder;
+      } else if (locations[bird] === visit.feeder) {
         // do nothing
       } else {
         let start = locations[bird];
-        let end = visit.feederId;
+        let end = visit.feeder;
         let path = [start, end];
         let count = _.get(movements, path, 0);
         count++;
@@ -118,7 +118,7 @@ export class Statistics {
         count++;
         _.set(movements, path, count);
 
-        locations[bird] = visit.feederId;
+        locations[bird] = visit.feeder;
       }
     });
     return movements;

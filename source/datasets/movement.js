@@ -8,8 +8,8 @@ export default {
   birds: [ 'a' ],
   feeders: [ 'Y', 'Z' ],
   visits: [
-    { timestamp: 50, feederId: 'Z', birdId: 'a'},
-    { timestamp: 55, feederId: 'Y', birdId: 'a'},
+    { timestamp: 50, feeder: 'Z', bird: 'a'},
+    { timestamp: 55, feeder: 'Y', bird: 'a'},
   ],
   statistics: {
     birds: {

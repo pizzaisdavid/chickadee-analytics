@@ -104,8 +104,8 @@ export default class Api extends EventEmitter {
       .map((visit) => { 
         return {
           timestamp: visit.visitTimestamp,
-          birdId: visit.rfid,
-          feederId: visit.feederID,
+          bird: visit.rfid,
+          feeder: visit.feederID,
         };
       })
       .value();

@@ -19,7 +19,7 @@ export default {
   birds: [ 'a' ],
   feeders: [ 'Z' ],
   visits: [
-    { timestamp: 55, feederId: 'Z', birdId: 'a'},
+    { timestamp: 55, feeder: 'Z', bird: 'a'},
   ],
   statistics: {
     feeders: {
