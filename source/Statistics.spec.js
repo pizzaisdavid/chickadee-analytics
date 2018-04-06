@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import assert from 'assert';
 
-import { Statistics, RESOURCES } from './Statistics';
+import { Statistics, RESOURCE } from './Statistics';
 import { empty, single, simple, movement, movementUnordered } from './datasets';
 
 describe('Statistics' , () => {
@@ -26,8 +26,8 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        const duration = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].duration;
-        const grouping = dataset.config[RESOURCES.RECENT_VISITS_SUMMARY].grouping;
+        const duration = dataset.config[RESOURCE.RECENT_VISITS_SUMMARY].duration;
+        const grouping = dataset.config[RESOURCE.RECENT_VISITS_SUMMARY].grouping;
         const actual = statistics.computeVisitsForPopulation(duration, grouping);
         const expected = dataset.statistics.visits.grouped;
         assert.deepEqual(actual, expected);
@@ -66,7 +66,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        const duration = dataset.config[RESOURCES.RECENT_CHECKINS].duration;
+        const duration = dataset.config[RESOURCE.RECENT_CHECKINS].duration;
         assert.deepEqual(
           statistics.computeVisitsByFeederForPopulation(duration),
           dataset.statistics.feeders.checkins

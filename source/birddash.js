@@ -6,7 +6,8 @@ _.mixin({
   'groupByFeeder': groupByFeeder,
   'countByFeeder': countByFeeder,
   'zero': zero,
-  'filterByTimestampsOlderThan': filterByTimestampsOlderThan,
+  'filterByTimestampsOlderThan': filterByTimestampsAfter,
+  'countByTimestampStep': countByTimestampStep,
 });
 
 function filterByBird(list, bird) {
@@ -17,8 +18,16 @@ function filterByFeeder(list, feeder) {
   return _.filter(list, (item) => item.feeder === feeder);
 }
 
+function filterByTimestampsAfter(visits, limitTimestamp) {
+  return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
+}
+
 function countByFeeder(visits) {
   return _.countBy(visits, 'feeder');
+}
+
+function countByTimestampStep(visits, step) {
+  return _.countBy(visits, (visit) => Math.floor(visit.timestamp / step) * step);
 }
 
 function groupByFeeder(visits) {
@@ -31,10 +40,6 @@ function zero(list) {
     destination[value] = 0;
   });
   return destination;
-}
-
-function filterByTimestampsOlderThan(visits, limitTimestamp) {
-  return _.filter(visits, (visit) => visit.timestamp >= limitTimestamp);
 }
 
 export default _;

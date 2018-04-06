@@ -1,7 +1,7 @@
 
 import _ from './birddash';
 
-export const RESOURCES = {
+export const RESOURCE = {
   RECENT_VISITS_SUMMARY: 'RECENT_VISITS_SUMMARY',
   RECENT_CHECKINS: 'RECENT_CHECKINS',
   ASSOCIATIONS: 'ASSOCIATIONS',
@@ -55,18 +55,14 @@ export class Statistics {
     return this.visits.length;
   }
 
-  filterVisitsById(visits, id) {
-    return _.filter(visits, (visit) => visit.bird === id);
-  }
-
   computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
-
     const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
-    const selectedVisits = this.filterVisitsByTimestamp(this.visits, oldestUnixTimestampAllowed);
-
-    const ye = _.countBy(selectedVisits, (visit) => this.computeGOUP(visit.timestamp, step));
+    const ye = _(this.visits)
+      .filterByTimestampsOlderThan(oldestUnixTimestampAllowed)
+      .countByTimestampStep(step)
+      .value();
     return _.merge(group, ye);
   }
 
@@ -97,7 +93,7 @@ export class Statistics {
     const locations = _.zero(this.birds);
 
     const movements = {};
-    const selectedVisits = this.filterVisitsById(this.visits, id);
+    const selectedVisits = _.filterByBird(this.visits, id);
 
     _.each(selectedVisits, (visit) => {
       const bird = visit.bird;
