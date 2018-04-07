@@ -4,9 +4,25 @@ import assert from 'assert';
 
 import { RESOURCE } from './constants';
 import { Statistics } from './Statistics';
-import { empty, single, simple, movement, movementUnordered } from './datasets';
+import { add, empty, single, simple, movement, movementUnordered } from './datasets';
 
 describe('Statistics' , () => {
+
+  describe('ADD', () => {
+    _.each([
+      add,
+    ], (dataset) => {
+      it(dataset.name, () => {
+        const statistics = new Statistics(dataset.clock);
+        statistics.addBirds(dataset.birds[0]);
+        statistics.addBirds(dataset.birds[1]);
+        statistics.addFeeders(dataset.feeders[0]);
+        statistics.addFeeders(dataset.feeders[1]);
+        assert.deepEqual(statistics.birds.length, dataset.statistics.birds.total);
+        assert.deepEqual(statistics.feeders.length, dataset.statistics.feeders.total);
+      });
+    });
+  });
 
   describe('POPULATION LIFETIME: visit total', () => {
     _.map([

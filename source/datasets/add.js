@@ -16,10 +16,10 @@ export default {
   visits: [],
   statistics: {
     birds: {
-      count: 3,
+      total: 3,
     },
     feeders: {
-      count: 3,
+      total: 3,
     },
   },
 };
