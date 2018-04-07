@@ -2,7 +2,7 @@
 import { RESOURCE } from '../constants';
 
 export default {
-  name: 'associations-0',
+  name: 'associations-no-contact',
   clock: { timestamp: 60 },
   config: {
     [RESOURCE.ASSOCIATIONS]: {
@@ -10,18 +10,18 @@ export default {
     }
   },
   birds: [ 'a', 'b' ],
-  feeders: [ 'Z' ],
+  feeders: [ 'Y', 'Z' ],
   visits: [
-    { timestamp: 20, feeder: 'Z', bird: 'a'},
+    { timestamp: 20, feeder: 'Y', bird: 'a'},
     { timestamp: 25, feeder: 'Z', bird: 'b'},
-    { timestamp: 40, feeder: 'Z', bird: 'a'},
+    { timestamp: 40, feeder: 'Y', bird: 'a'},
     { timestamp: 45, feeder: 'Z', bird: 'b'},
   ],
   statistics: {
     birds: {
       associations: {
-        a: { b: 2 },
-        b: { a: 2 },
+        a: {},
+        b: {},
       }
     },
   },

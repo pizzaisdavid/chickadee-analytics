@@ -6,10 +6,10 @@ import simple from './simple';
 import movement from './movement';
 import movementUnordered from './movement-unordered';
 import oneBirdManyFeeders from './one-bird-many-feeders';
-import associations0 from './associations-0';
-import associations1 from './associations-1';
+import associationsEven from './associations-even';
+import associationsNoContact from './associations-no-contact';
 import associations2 from './associations-2';
-import associations3 from './associations-3';
+import associationsDontDoubleCount from './associations-dont-double-count';
 
 export {
   add,
@@ -19,8 +19,8 @@ export {
   movement,
   movementUnordered,
   oneBirdManyFeeders,
-  associations0,
-  associations1,
+  associationsEven,
+  associationsNoContact,
   associations2,
-  associations3,
+  associationsDontDoubleCount,
 };

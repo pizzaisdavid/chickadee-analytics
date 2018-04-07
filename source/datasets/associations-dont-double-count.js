@@ -2,7 +2,7 @@
 import { RESOURCE } from '../constants';
 
 export default {
-  name: 'associations-3',
+  name: 'associations-dont-double-count',
   clock: { timestamp: 60 },
   config: {
     [RESOURCE.ASSOCIATIONS]: {
@@ -20,8 +20,8 @@ export default {
   statistics: {
     birds: {
       associations: {
-        a: { b: 3 },
-        b: { a: 3 },
+        a: { b: 2 },
+        b: { a: 2 },
       }
     },
   },

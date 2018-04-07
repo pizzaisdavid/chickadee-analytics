@@ -12,10 +12,10 @@ import {
   movement,
   movementUnordered,
   oneBirdManyFeeders,
-  associations0,
-  associations1,
+  associationsEven,
+  associationsNoContact,
   associations2,
-  associations3,
+  associationsDontDoubleCount,
 } from './datasets';
 
 describe('Statistics' , () => {
@@ -111,10 +111,10 @@ describe('Statistics' , () => {
       empty,
       single,
       simple,
-      associations0,
-      associations1,
+      associationsEven,
+      associationsNoContact,
       associations2,
-      associations3,
+      associationsDontDoubleCount,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
         const timespan = dataset.config[RESOURCE.ASSOCIATIONS].timespan;
