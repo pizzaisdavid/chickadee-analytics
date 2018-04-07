@@ -59,8 +59,11 @@ app.get('/api/birds/:id/movements', (req, res) => {
 });
 
 app.get('/api/birds/associations', (req, res) => {
-  const timespan = getTimespan(req.query.timespan);
   res.json(statistics.computeAssociationsForPopulation());
+});
+
+app.get('/api/birds/:id/associations', (req, res) => {
+  res.json(statistics.computeAssociationsForPopulation()[req.params.id]);
 });
 
 function getTimespan(value) {
