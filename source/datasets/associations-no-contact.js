@@ -2,7 +2,7 @@
 import { RESOURCE } from '../constants';
 
 export default {
-  name: 'associations-1',
+  name: 'associations-no-contact',
   clock: { timestamp: 60 },
   config: {
     [RESOURCE.ASSOCIATIONS]: {

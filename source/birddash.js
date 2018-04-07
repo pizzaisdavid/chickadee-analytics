@@ -52,18 +52,25 @@ function zero(list) {
 function filterForwardAssociations(visits, bird, duration) {
   let timestamp;
   let location;
+  let seen = new Set();
   return _.filter(visits, (visit) => {
     if (visit.bird === bird) {
       timestamp = visit.timestamp;
       location = visit.feeder;
+      seen = new Set();
       return false;
     }
     if (visit.feeder !== location) {
       return false;
     }
     if (timestamp + duration < visit.timestamp) {
+      seen = new Set();
       return false;
     }
+    if (seen.has(visit.bird)) {
+      return false;
+    }
+    seen.add(visit.bird);
     return true;
   });
 }
