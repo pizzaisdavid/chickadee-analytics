@@ -129,5 +129,4 @@ export class Statistics {
       .countByBird()
       .value();
   }
-
 }
