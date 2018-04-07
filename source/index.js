@@ -5,7 +5,9 @@ import cors from 'cors';
 
 import Api from './Api';
 import { Clock } from './Clock';
-import { RESOURCES, DURATIONS, Statistics } from './Statistics';
+import { RESOURCE, DURATION } from './constants';
+import { Statistics } from './Statistics';
+import { Cache } from './Cache';
 
 const app = express();
 
@@ -24,15 +26,9 @@ var corsOptions = {
 
 const port = 18156;
 const clock = new Clock();
-const statistics = new Statistics({
-  [RESOURCES.RECENT_VISITS_SUMMARY]: {
-    duration: DURATIONS.HOUR,
-    grouping: DURATIONS.MINUTE,
-  },
-  [RESOURCES.RECENT_CHECKINS]: {
-    duration: DURATIONS.HOUR,
-  },
-}, clock);
+const statistics = new Statistics(clock);
+const cache = Cache.make(statistics, clock);
+
 const api = new Api();
 
 api.on(Api.EVENTS.INITIALIZE, () => {
@@ -48,30 +44,46 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-app.get('/api/stuff', (req, res) => {
-  res.json({
-    [Api.RESOURCES.FEEDERS]: statistics.feeders,
-    [Api.RESOURCES.BIRDS]: statistics.birds,
-    [Api.RESOURCES.VISITS]: statistics.visits.length,
-  });
-  res.end();
-});
-
 app.get('/api/visits/summary', (req, res) => {
-  res.json(statistics.getVisitsGroupedByTime());
-});
-
-app.get('/api/birds/:id/feeders', (req, res) => {
-  res.json(statistics.getBirdsFeederVisits(req.params.id));
-});
-
-app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.getBirdMovements(req.params.id));
+  res.json(statistics.computeVisitsForPopulation(DURATION.HOUR, DURATION.MINUTE));
 });
 
 app.get('/api/feeders/checkins', (req, res) => {
-  res.json(statistics.getFeederCheckins(DURATIONS.HOUR));
+  const duration = getTimespan(req.query.timespan);
+  res.json(statistics.computeVisitsByFeederForPopulation(duration));
 });
+
+app.get('/api/birds/:id/feeders', (req, res) => {
+  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id));
+});
+
+app.get('/api/birds/:id/movements', (req, res) => {
+  res.json(statistics.computeMovementsForIndividual(req.params.id));
+});
+
+app.get('/api/birds/associations', (req, res) => {
+  res.json(cache.get(RESOURCE.ASSOCIATIONS));
+});
+
+app.get('/api/birds/:id/associations', (req, res) => {
+  res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
+});
+
+function getTimespan(value) {
+  switch (value) {
+    case 'day':
+      return DURATION.DAY;
+    case 'week':
+      return DURATION.WEEK;
+    case 'month':
+      return DURATION.MONTH;
+    case 'year':
+      return DURATION.YEAR;
+    case 'all':
+    default:
+      return DURATION.LIFETIME;
+  }
+}
 
 app.listen(port, () => {
   console.log(`Analytics running on ${port}`);

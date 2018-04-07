@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { EventEmitter } from 'events';
 
 import config from './config';
-import { RESOURCES } from './Statistics';
+import { RESOURCE } from './constants';
 
 export default class Api extends EventEmitter {
 
@@ -91,21 +91,11 @@ export default class Api extends EventEmitter {
   }
 
   prepareBirds(birds) {
-    return _
-      .chain(birds)
-      .map((bird) => {
-        return { id: bird.rfid };
-      })
-      .keyBy('id')
-      .value();
+    return _.map(birds, (bird) => bird.rfid);
   }
 
   prepareFeeders(feeders) {
-    return _
-      .chain(feeders)
-      .map((feeder) => _.pick(feeder, ['id', 'latitude', 'longitude']))
-      .keyBy('id')
-      .value();
+    return _.map(feeders, (feeder) => feeder.id);
   }
 
   prepareVisits(visits) {
@@ -114,8 +104,8 @@ export default class Api extends EventEmitter {
       .map((visit) => { 
         return {
           timestamp: visit.visitTimestamp,
-          birdId: visit.rfid,
-          feederId: visit.feederID,
+          bird: visit.rfid,
+          feeder: visit.feederID,
         };
       })
       .value();

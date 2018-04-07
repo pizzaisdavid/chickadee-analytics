@@ -1,26 +1,25 @@
 
-import { RESOURCES } from '../Statistics';
+import { RESOURCE } from '../constants';
 
 export default {
   name: 'single',
   clock: { timestamp: 60 },
   config: {
-    [RESOURCES.RECENT_VISITS_SUMMARY]: {
+    [RESOURCE.RECENT_VISITS_SUMMARY]: {
       duration: 30,
       grouping: 10,
     },
-    [RESOURCES.RECENT_CHECKINS]: {
+    [RESOURCE.RECENT_CHECKINS]: {
       duration: 30,
     },
+    [RESOURCE.ASSOCIATIONS]: {
+      timespan: 10
+    }
   },
-  birds: { 
-    a: { id: 'a' },
-  },
-  feeders: {
-    Z: { id: 'Z', longitude: 0, latitude: 0 },
-  },
+  birds: [ 'a' ],
+  feeders: [ 'Z' ],
   visits: [
-    { timestamp: 55, feederId: 'Z', birdId: 'a'},
+    { timestamp: 55, feeder: 'Z', bird: 'a'},
   ],
   statistics: {
     feeders: {
@@ -39,8 +38,11 @@ export default {
         a: { Z: 1 },
       },
       movements: {
-        a: { },
-      }
+        a: {},
+      },
+      associations: {
+        a: {},
+      },
     },
   },
 };
