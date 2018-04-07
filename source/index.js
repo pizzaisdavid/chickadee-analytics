@@ -66,7 +66,7 @@ app.get('/api/birds/associations', (req, res) => {
 });
 
 app.get('/api/birds/:id/associations', (req, res) => {
-  res.json(statistics.computeAssociationsForPopulation()[req.params.id]);
+  res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
 });
 
 function getTimespan(value) {
