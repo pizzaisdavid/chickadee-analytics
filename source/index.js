@@ -46,8 +46,8 @@ app.get('/api/visits/summary', (req, res) => {
 });
 
 app.get('/api/feeders/checkins', (req, res) => {
-  const timespan = getTimespan(req.query.timespan);
-  res.json(statistics.computeVisitsByFeederForPopulation(timespan));
+  const duration = getTimespan(req.query.timespan);
+  res.json(statistics.computeVisitsByFeederForPopulation(duration));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {

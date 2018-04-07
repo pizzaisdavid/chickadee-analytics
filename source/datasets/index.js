@@ -5,6 +5,7 @@ import single from './single';
 import simple from './simple';
 import movement from './movement';
 import movementUnordered from './movement-unordered';
+import oneBirdManyFeeders from './one-bird-many-feeders';
 
 export {
   add,
@@ -13,4 +14,5 @@ export {
   simple,
   movement,
   movementUnordered,
+  oneBirdManyFeeders,
 };

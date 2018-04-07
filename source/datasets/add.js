@@ -2,7 +2,7 @@
 import { RESOURCE } from '../constants';
 
 export default {
-  name: 'empty',
+  name: 'add',
   clock: { timestamp: 60 },
   config: {},
   birds: [

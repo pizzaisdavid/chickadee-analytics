@@ -4,7 +4,15 @@ import assert from 'assert';
 
 import { RESOURCE } from './constants';
 import { Statistics } from './Statistics';
-import { add, empty, single, simple, movement, movementUnordered } from './datasets';
+import {
+  add,
+  empty,
+  single,
+  simple,
+  movement,
+  movementUnordered,
+  oneBirdManyFeeders,
+} from './datasets';
 
 describe('Statistics' , () => {
 
@@ -69,6 +77,7 @@ describe('Statistics' , () => {
       empty,
       movement,
       movementUnordered,
+      oneBirdManyFeeders,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
         assert.deepEqual(statistics.computeMovementsForIndividual(id), dataset.statistics.birds.movements[id]);
