@@ -7,6 +7,7 @@ import Api from './Api';
 import { Clock } from './Clock';
 import { RESOURCE, DURATION } from './constants';
 import { Statistics } from './Statistics';
+import { Cache } from './Cache';
 
 const app = express();
 
@@ -26,6 +27,8 @@ var corsOptions = {
 const port = 18156;
 const clock = new Clock();
 const statistics = new Statistics(clock);
+const cache = Cache.make(statistics, clock);
+
 const api = new Api();
 
 api.on(Api.EVENTS.INITIALIZE, () => {
@@ -59,11 +62,11 @@ app.get('/api/birds/:id/movements', (req, res) => {
 });
 
 app.get('/api/birds/associations', (req, res) => {
-  res.json(statistics.computeAssociationsForPopulation());
+  res.json(cache.get(RESOURCE.ASSOCIATIONS));
 });
 
 app.get('/api/birds/:id/associations', (req, res) => {
-  res.json(statistics.computeAssociationsForPopulation()[req.params.id]);
+  res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
 });
 
 function getTimespan(value) {

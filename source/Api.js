@@ -95,7 +95,7 @@ export default class Api extends EventEmitter {
   }
 
   prepareFeeders(feeders) {
-    return _.map((feeder) => feeder.id);
+    return _.map(feeders, (feeder) => feeder.id);
   }
 
   prepareVisits(visits) {
