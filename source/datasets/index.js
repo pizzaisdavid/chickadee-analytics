@@ -8,8 +8,9 @@ import movementUnordered from './movement-unordered';
 import oneBirdManyFeeders from './one-bird-many-feeders';
 import associationsEven from './associations-even';
 import associationsNoContact from './associations-no-contact';
-import associations2 from './associations-2';
+import associationsOdd from './associations-odd';
 import associationsDontDoubleCount from './associations-dont-double-count';
+import associationsTimeout from './associations-timeout';
 
 export {
   add,
@@ -21,6 +22,7 @@ export {
   oneBirdManyFeeders,
   associationsEven,
   associationsNoContact,
-  associations2,
+  associationsOdd,
   associationsDontDoubleCount,
+  associationsTimeout,
 };

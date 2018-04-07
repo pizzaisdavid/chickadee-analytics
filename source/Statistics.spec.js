@@ -14,8 +14,9 @@ import {
   oneBirdManyFeeders,
   associationsEven,
   associationsNoContact,
-  associations2,
+  associationsOdd,
   associationsDontDoubleCount,
+  associationsTimeout
 } from './datasets';
 
 describe('Statistics' , () => {
@@ -113,8 +114,9 @@ describe('Statistics' , () => {
       simple,
       associationsEven,
       associationsNoContact,
-      associations2,
+      associationsOdd,
       associationsDontDoubleCount,
+      associationsTimeout,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
         const timespan = dataset.config[RESOURCE.ASSOCIATIONS].timespan;
