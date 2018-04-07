@@ -40,7 +40,9 @@ export default {
       movements: {
         a: {},
       },
-      associations: {},
+      associations: {
+        a: {},
+      },
     },
   },
 };

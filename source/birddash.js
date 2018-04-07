@@ -79,6 +79,11 @@ function symmetric(matrix) {
       _.set(newMatrix, [key2, key1], total);
     })
   });
+  _.each(matrix, (value, key) => {
+    if (newMatrix[key] === undefined) {
+      newMatrix[key] = {};
+    }
+  });
   return newMatrix;
 }
 

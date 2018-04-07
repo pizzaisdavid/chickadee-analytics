@@ -36,5 +36,17 @@ describe('birddash', () => {
       };
       assert.deepEqual(_.symmetric(object), expected);
     });
+
+    it('jagged - one row has one, the other does not.', () => {
+      const object = {
+        a: {},
+        b: {},
+      };
+      const expected = {
+        a: {},
+        b: {},
+      };
+      assert.deepEqual(_.symmetric(object), expected);
+    });
   });
 });
