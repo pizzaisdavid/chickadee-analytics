@@ -60,7 +60,7 @@ describe('Statistics' , () => {
     });
   });
 
-  describe('INDIVIDUAL LIFETIME: get feeder checkins', () => {
+  describe('INDIVIDUAL LIFETIME: feeder checkins', () => {
     _.map([
       empty,
       single,
@@ -90,6 +90,7 @@ describe('Statistics' , () => {
       empty,
       single,
       simple,
+      oneBirdManyFeeders,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
         const duration = dataset.config[RESOURCE.RECENT_CHECKINS].duration;
