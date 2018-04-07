@@ -37,7 +37,7 @@ describe('birddash', () => {
       assert.deepEqual(_.symmetric(object), expected);
     });
 
-    it('jagged - one row has one, the other does not.', () => {
+    it('empty child objects', () => {
       const object = {
         a: {},
         b: {},
