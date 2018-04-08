@@ -129,4 +129,20 @@ export class Statistics {
       .countByBird()
       .value();
   }
+
+  computeMostActiveBirds(duration, limit) {
+    // TODO: use duration
+    const x = _(this.visits)
+      .countByBird()
+      .map((value, key) => {
+        return { id: key, count: value }
+      })
+      .sortBy(['count'])
+      .reverse()
+      .slice(0, limit)
+      .value()
+
+    console.log(x);
+    return x;
+  }
 }
