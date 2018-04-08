@@ -70,7 +70,8 @@ app.get('/api/birds/:id/feeders', (req, res) => {
 });
 
 app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.computeMovementsForIndividual(req.params.id));
+  const duration = getTimespan(req.query.duration)
+  res.json(statistics.computeMovementsForIndividual(req.params.id, duration));
 });
 
 app.get('/api/birds/associations', (req, res) => {
