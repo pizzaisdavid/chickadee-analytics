@@ -44,7 +44,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        assert.deepEqual(statistics.getTotalVisits(), dataset.statistics.visits.total);
+        assert.deepEqual(statistics.computeTotalVisitsForPopulation(Infinity), dataset.statistics.visits.total);
       });
     });
   });
