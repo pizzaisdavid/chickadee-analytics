@@ -49,7 +49,8 @@ app.get('/api/visits/summary', (req, res) => { // TODO: should remove 'summary' 
 });
 
 app.get('/api/visits/total', (req, res) => {
-  res.json(statistics.computeTotalVisits());
+  const duration = getTimespan(req.query.duration);
+  res.json(statistics.computeTotalVisitsForPopulation(duration));
 });
 
 app.get('/api/feeders/visits', (req, res) => {

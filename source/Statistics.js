@@ -112,8 +112,10 @@ export class Statistics {
     return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
   }
 
-  computeTotalVisits() {
-    return _.size(this.visits);
+  computeTotalVisitsForPopulation(duration) {
+    return _(this.visits)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
+      .size();
   }
 
   computeAssociationsForPopulation(timespan) {
