@@ -44,8 +44,12 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-app.get('/api/visits/summary', (req, res) => {
+app.get('/api/visits/summary', (req, res) => { // TODO: should remove 'summary' from url
   res.json(statistics.computeVisitsForPopulation(DURATION.HOUR, DURATION.MINUTE));
+});
+
+app.get('/api/visits/total', (req, res) => {
+  res.json(statistics.computeTotalVisits());
 });
 
 app.get('/api/feeders/checkins', (req, res) => {

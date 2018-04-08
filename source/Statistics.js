@@ -112,7 +112,7 @@ export class Statistics {
     return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
   }
 
-  getTotalVisits() {
+  computeTotalVisits() {
     return _.size(this.visits);
   }
 
