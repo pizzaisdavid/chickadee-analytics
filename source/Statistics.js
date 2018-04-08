@@ -62,20 +62,23 @@ export class Statistics {
     return slots;
   }
 
-  computeMovementsForIndividual(id) {
-    const locations = _.zero(this.birds);
+  computeMovementsForIndividual(id, duration) {
+    let location = undefined;
 
     const movements = {};
-    const selectedVisits = _.filterByBird(this.visits, id);
+    const selectedVisits = _(this.visits)
+      .filterByBird(id)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
+      .value();
 
     _.each(selectedVisits, (visit) => {
       const bird = visit.bird;
-      if (!locations[bird]) {
-        locations[bird] = visit.feeder;
-      } else if (locations[bird] === visit.feeder) {
+      if (!location) {
+        location = visit.feeder;
+      } else if (location === visit.feeder) {
         // do nothing
       } else {
-        let start = locations[bird];
+        let start = location;
         let end = visit.feeder;
         let path = [start, end];
         let count = _.get(movements, path, 0);
@@ -87,15 +90,16 @@ export class Statistics {
         count++;
         _.set(movements, path, count);
 
-        locations[bird] = visit.feeder;
+        location = visit.feeder;
       }
     });
     return movements;
   }
 
-  computeVisitsByFeederForIndividual(bird) {
+  computeVisitsByFeederForIndividual(bird, duration) {
     return _(this.visits)
       .filterByBird(bird)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByFeeder()
       .value();
   }
@@ -112,8 +116,10 @@ export class Statistics {
     return this.clock.timestamp - duration + EXCLUSIVE_INCLUDE;
   }
 
-  getTotalVisits() {
-    return _.size(this.visits);
+  computeTotalVisitsForPopulation(duration) {
+    return _(this.visits)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
+      .size();
   }
 
   computeAssociationsForPopulation(timespan) {
@@ -128,5 +134,21 @@ export class Statistics {
       .filterForwardAssociations(bird, timespan)
       .countByBird()
       .value();
+  }
+
+  computeMostActiveBirds(duration, limit) {
+    // TODO: use duration
+    const x = _(this.visits)
+      .countByBird()
+      .map((value, key) => {
+        return { id: key, count: value }
+      })
+      .sortBy(['count'])
+      .reverse()
+      .slice(0, limit)
+      .value()
+
+    console.log(x);
+    return x;
   }
 }

@@ -44,7 +44,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForPopulation(dataset, (statistics) => {
-        assert.deepEqual(statistics.getTotalVisits(), dataset.statistics.visits.total);
+        assert.deepEqual(statistics.computeTotalVisitsForPopulation(Infinity), dataset.statistics.visits.total);
       });
     });
   });
@@ -72,7 +72,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.computeVisitsByFeederForIndividual(id), dataset.statistics.birds.checkins[id]);
+        assert.deepEqual(statistics.computeVisitsByFeederForIndividual(id, Infinity), dataset.statistics.birds.checkins[id]);
       });
     });
   });
@@ -85,7 +85,7 @@ describe('Statistics' , () => {
       oneBirdManyFeeders,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.computeMovementsForIndividual(id), dataset.statistics.birds.movements[id]);
+        assert.deepEqual(statistics.computeMovementsForIndividual(id, Infinity), dataset.statistics.birds.movements[id]);
       });
     });
   });

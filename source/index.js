@@ -44,21 +44,34 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-app.get('/api/visits/summary', (req, res) => {
+app.get('/api/visits/summary', (req, res) => { // TODO: should remove 'summary' from url
   res.json(statistics.computeVisitsForPopulation(DURATION.HOUR, DURATION.MINUTE));
 });
 
-app.get('/api/feeders/checkins', (req, res) => {
-  const duration = getTimespan(req.query.timespan);
+app.get('/api/visits/total', (req, res) => {
+  const duration = getTimespan(req.query.duration);
+  res.json(statistics.computeTotalVisitsForPopulation(duration));
+});
+
+app.get('/api/feeders/visits', (req, res) => {
+  const duration = getTimespan(req.query.duration);
   res.json(statistics.computeVisitsByFeederForPopulation(duration));
 });
 
+app.get('/api/birds/leaderboard', (req, res) => {
+  const duration = getTimespan(req.query.duration);
+  const limit = parseLimit(req.query.limit);
+  res.json(statistics.computeMostActiveBirds(duration, limit));
+});
+
 app.get('/api/birds/:id/feeders', (req, res) => {
-  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id));
+  const duration = getTimespan(req.query.duration)
+  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id, duration));
 });
 
 app.get('/api/birds/:id/movements', (req, res) => {
-  res.json(statistics.computeMovementsForIndividual(req.params.id));
+  const duration = getTimespan(req.query.duration)
+  res.json(statistics.computeMovementsForIndividual(req.params.id, duration));
 });
 
 app.get('/api/birds/associations', (req, res) => {
@@ -68,6 +81,10 @@ app.get('/api/birds/associations', (req, res) => {
 app.get('/api/birds/:id/associations', (req, res) => {
   res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
 });
+
+function parseLimit(value) {
+  return value || Infinity;
+}
 
 function getTimespan(value) {
   switch (value) {
