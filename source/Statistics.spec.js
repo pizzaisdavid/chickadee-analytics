@@ -72,7 +72,7 @@ describe('Statistics' , () => {
       simple,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.computeVisitsByFeederForIndividual(id), dataset.statistics.birds.checkins[id]);
+        assert.deepEqual(statistics.computeVisitsByFeederForIndividual(id, Infinity), dataset.statistics.birds.checkins[id]);
       });
     });
   });

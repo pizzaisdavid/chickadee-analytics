@@ -65,7 +65,8 @@ app.get('/api/birds/leaderboard', (req, res) => {
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
-  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id));
+  const duration = getTimespan(req.query.duration)
+  res.json(statistics.computeVisitsByFeederForIndividual(req.params.id, duration));
 });
 
 app.get('/api/birds/:id/movements', (req, res) => {
