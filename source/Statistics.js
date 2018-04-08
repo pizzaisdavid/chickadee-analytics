@@ -93,9 +93,10 @@ export class Statistics {
     return movements;
   }
 
-  computeVisitsByFeederForIndividual(bird) {
+  computeVisitsByFeederForIndividual(bird, duration) {
     return _(this.visits)
       .filterByBird(bird)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByFeeder()
       .value();
   }
