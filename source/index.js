@@ -52,8 +52,8 @@ app.get('/api/visits/total', (req, res) => {
   res.json(statistics.computeTotalVisits());
 });
 
-app.get('/api/feeders/checkins', (req, res) => {
-  const duration = getTimespan(req.query.timespan);
+app.get('/api/feeders/visits', (req, res) => {
+  const duration = getTimespan(req.query.duration);
   res.json(statistics.computeVisitsByFeederForPopulation(duration));
 });
 
