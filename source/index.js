@@ -52,9 +52,15 @@ app.get('/api/visits/total', (req, res) => {
   res.json(statistics.computeTotalVisits());
 });
 
-app.get('/api/feeders/checkins', (req, res) => {
-  const duration = getTimespan(req.query.timespan);
+app.get('/api/feeders/visits', (req, res) => {
+  const duration = getTimespan(req.query.duration);
   res.json(statistics.computeVisitsByFeederForPopulation(duration));
+});
+
+app.get('/api/birds/leaderboard', (req, res) => {
+  const duration = getTimespan(req.query.duration);
+  const limit = parseLimit(req.query.limit);
+  res.json(statistics.computeMostActiveBirds(duration, limit));
 });
 
 app.get('/api/birds/:id/feeders', (req, res) => {
@@ -72,6 +78,10 @@ app.get('/api/birds/associations', (req, res) => {
 app.get('/api/birds/:id/associations', (req, res) => {
   res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
 });
+
+function parseLimit(value) {
+  return value || Infinity;
+}
 
 function getTimespan(value) {
   switch (value) {
