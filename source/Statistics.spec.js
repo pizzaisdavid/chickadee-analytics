@@ -85,7 +85,7 @@ describe('Statistics' , () => {
       oneBirdManyFeeders,
     ], (dataset) => {
       testDatasetForIndividuals(dataset, (statistics, id) => {
-        assert.deepEqual(statistics.computeMovementsForIndividual(id), dataset.statistics.birds.movements[id]);
+        assert.deepEqual(statistics.computeMovementsForIndividual(id, Infinity), dataset.statistics.birds.movements[id]);
       });
     });
   });

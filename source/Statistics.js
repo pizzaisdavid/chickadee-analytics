@@ -62,20 +62,23 @@ export class Statistics {
     return slots;
   }
 
-  computeMovementsForIndividual(id) {
-    const locations = _.zero(this.birds);
+  computeMovementsForIndividual(id, duration) {
+    let location = undefined;
 
     const movements = {};
-    const selectedVisits = _.filterByBird(this.visits, id);
+    const selectedVisits = _(this.visits)
+      .filterByBird(id)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
+      .value();
 
     _.each(selectedVisits, (visit) => {
       const bird = visit.bird;
-      if (!locations[bird]) {
-        locations[bird] = visit.feeder;
-      } else if (locations[bird] === visit.feeder) {
+      if (!location) {
+        location = visit.feeder;
+      } else if (location === visit.feeder) {
         // do nothing
       } else {
-        let start = locations[bird];
+        let start = location;
         let end = visit.feeder;
         let path = [start, end];
         let count = _.get(movements, path, 0);
@@ -87,7 +90,7 @@ export class Statistics {
         count++;
         _.set(movements, path, count);
 
-        locations[bird] = visit.feeder;
+        location = visit.feeder;
       }
     });
     return movements;
