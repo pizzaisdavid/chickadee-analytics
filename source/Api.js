@@ -48,6 +48,7 @@ export default class Api extends EventEmitter {
       `, (error) => {
       if (error) {
         console.log('error init db');
+        process.exit(1);
       }
       this.emit('initialize');
       callback();
@@ -65,6 +66,7 @@ export default class Api extends EventEmitter {
     `, (error, results, fields) => {
       if (error) {
         console.log(error);
+        process.exit(1);
       }
       const rawFeeders = results[0];
       const rawBirds = results[2];

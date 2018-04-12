@@ -44,42 +44,43 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'good' });
 });
 
-app.get('/api/visits/summary', (req, res) => { // TODO: should remove 'summary' from url
-  res.json(statistics.computeVisitsForPopulation(DURATION.HOUR, DURATION.MINUTE));
-});
 
-app.get('/api/visits/total', (req, res) => {
+app.get('/api/visits/total', (req, res) => { // count
   const duration = getTimespan(req.query.duration);
   res.json(statistics.computeTotalVisitsForPopulation(duration));
 });
 
-app.get('/api/feeders/visits', (req, res) => {
+app.get('/api/feeders/visits', (req, res) => { // heatmap
   const duration = getTimespan(req.query.duration);
   res.json(statistics.computeVisitsByFeederForPopulation(duration));
 });
 
-app.get('/api/birds/leaderboard', (req, res) => {
-  const duration = getTimespan(req.query.duration);
-  const limit = parseLimit(req.query.limit);
-  res.json(statistics.computeMostActiveBirds(duration, limit));
+app.get('/api/visits/summary', (req, res) => { // visits chart timeline
+  res.json(statistics.computeVisitsForPopulation(DURATION.HOUR, DURATION.MINUTE));
 });
 
-app.get('/api/birds/:id/feeders', (req, res) => {
+app.get('/api/birds/:id/feeders', (req, res) => { // pie chart
   const duration = getTimespan(req.query.duration)
   res.json(statistics.computeVisitsByFeederForIndividual(req.params.id, duration));
 });
 
-app.get('/api/birds/:id/movements', (req, res) => {
+app.get('/api/birds/:id/movements', (req, res) => { // movements map
   const duration = getTimespan(req.query.duration)
   res.json(statistics.computeMovementsForIndividual(req.params.id, duration));
+});
+
+app.get('/api/birds/:id/associations', (req, res) => { // associations
+  res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
 });
 
 app.get('/api/birds/associations', (req, res) => {
   res.json(cache.get(RESOURCE.ASSOCIATIONS));
 });
 
-app.get('/api/birds/:id/associations', (req, res) => {
-  res.json(cache.get(RESOURCE.ASSOCIATIONS)[req.params.id]);
+app.get('/api/birds/leaderboard', (req, res) => {
+  const duration = getTimespan(req.query.duration);
+  const limit = parseLimit(req.query.limit);
+  res.json(statistics.computeMostActiveBirds(duration, limit));
 });
 
 function parseLimit(value) {
