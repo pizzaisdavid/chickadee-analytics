@@ -1,5 +1,5 @@
 
-import _ from './birddash';
+import b_ from './birddash';
 
 import { RESOUCE } from './constants';
 
@@ -23,11 +23,11 @@ export class Statistics {
   }
 
   addBirds(birds) {
-    this.birds = _.uniq(this.birds.concat(birds));
+    this.birds = b_.uniq(this.birds.concat(birds));
   }
 
   addFeeders(feeders) {
-    this.feeders = _.uniq(this.feeders.concat(feeders));
+    this.feeders = b_.uniq(this.feeders.concat(feeders));
   }
 
   addVisits(visits) {
@@ -40,64 +40,39 @@ export class Statistics {
   computeVisitsForPopulation(duration, step) {
     const now = this.clock.timestamp;
     const oldestUnixTimestampAllowed = this.computeOldestAllowedTimestamp(duration);
-    const group = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
-    const ye = _(this.visits)
+    const zeroedOutTimeSlots = this.generateTimeSlots(oldestUnixTimestampAllowed, now, step);
+    const actualGroupedVisitCount = b_(this.visits)
       .filterByTimestampsOlderThan(oldestUnixTimestampAllowed)
       .countByTimestampStep(step)
       .value();
-    return _.merge(group, ye);
-  }
-
-  computeGOUP(timestamp, step) {
-    return Math.floor(timestamp / step) * step;
+    return b_.merge(zeroedOutTimeSlots, actualGroupedVisitCount);
   }
 
   generateTimeSlots(start, stop, step) {
-    const timestamps = _.range(start, stop);
+    const timestamps = b_.range(start, stop);
     const slots = {};
-    _.each(timestamps, (t) => {
-      const x = this.computeGOUP(t, step);
+    b_.each(timestamps, (t) => {
+      const x = this.computeTimeSlot(t, step);
       slots[x] = 0;
     });
     return slots;
   }
 
-  computeMovementsForIndividual(id, duration) {
-    let location = undefined;
+  computeTimeSlot(timestamp, step) {
+    return Math.floor(timestamp / step) * step;
+  }
 
-    const movements = {};
-    const selectedVisits = _(this.visits)
+  computeMovementsForIndividual(id, duration) {
+    return b_(this.visits)
       .filterByBird(id)
       .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
+      .computeMovements()
+      .symmetric()
       .value();
-
-    _.each(selectedVisits, (visit) => {
-      const bird = visit.bird;
-      if (!location) {
-        location = visit.feeder;
-      } else if (location === visit.feeder) {
-        // do nothing
-      } else {
-        let start = location;
-        let end = visit.feeder;
-        let path = [start, end];
-        let count = _.get(movements, path, 0);
-        count++;
-        _.set(movements, path, count);
-
-        path = [end, start];
-        count = _.get(movements, path, 0);
-        count++;
-        _.set(movements, path, count);
-
-        location = visit.feeder;
-      }
-    });
-    return movements;
   }
 
   computeVisitsByFeederForIndividual(bird, duration) {
-    return _(this.visits)
+    return b_(this.visits)
       .filterByBird(bird)
       .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByFeeder()
@@ -105,7 +80,7 @@ export class Statistics {
   }
 
   computeVisitsByFeederForPopulation(duration) {
-    return _(this.visits)
+    return b_(this.visits)
       .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByFeeder()
       .value();
@@ -117,28 +92,28 @@ export class Statistics {
   }
 
   computeTotalVisitsForPopulation(duration) {
-    return _(this.visits)
+    return b_(this.visits)
       .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .size();
   }
 
   computeAssociationsForPopulation(timespan) {
-    return _.symmetric(_.zipObject(
+    return b_.symmetric(b_.zipObject(
       this.birds,
-      _.map(this.birds, (bird) => this.computeForwardAssociationsForIndividual(bird, timespan))
+      b_.map(this.birds, (bird) => this.computeForwardAssociationsForIndividual(bird, timespan))
     ));
   }
 
   computeForwardAssociationsForIndividual(bird, timespan) {
-    return _(this.visits)
+    return b_(this.visits)
       .filterForwardAssociations(bird, timespan)
       .countByBird()
       .value();
   }
 
   computeMostActiveBirds(duration, limit) {
-    // TODO: use duration
-    const x = _(this.visits)
+    return b_(this.visits)
+      .filterByTimestampsOlderThan(this.computeOldestAllowedTimestamp(duration))
       .countByBird()
       .map((value, key) => {
         return { id: key, count: value }
@@ -146,9 +121,6 @@ export class Statistics {
       .sortBy(['count'])
       .reverse()
       .slice(0, limit)
-      .value()
-
-    console.log(x);
-    return x;
+      .value();
   }
 }
