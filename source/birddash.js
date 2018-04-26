@@ -10,6 +10,8 @@ _.mixin({
   'filterByTimestampsOlderThan': filterByTimestampsAfter,
   'filterForwardAssociations': filterForwardAssociations, 
   'countByTimestampStep': countByTimestampStep,
+  'computeMovements': computeMovements,
+  'increment': increment,
   'symmetric': symmetric,
 });
 
@@ -92,6 +94,29 @@ function symmetric(matrix) {
     }
   });
   return newMatrix;
+}
+
+function computeMovements(visits) {
+  let location;
+  const movements = {};
+
+  _.each(visits, (visit) => {
+    const bird = visit.bird;
+    if (!location || location === visit.feeder) {
+      // do nothing
+    } else {
+      let path = [location, visit.feeder];
+      _.increment(movements, path);
+    }
+    location = visit.feeder;
+  });
+  return movements;
+}
+
+function increment(object, path) {
+  let count = _.get(object, path, 0);
+  count++;
+  _.set(object, path, count);
 }
 
 export default _;
